@@ -70,3 +70,11 @@ backups/
 *.tmp
 *.bak
 *.backup
+
+# ---- Documentacion interna / notas ----
+docs/
+documentacion/
+solicitud_ambientes/
+scripts/
+*.txt
+.claude/
