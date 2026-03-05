@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arquitectura de Infraestructura - Sistema de Gestión de Archivos IGAC</title>
+    
+<style>
+    * {
+        box-sizing: border-box;
+    }
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 40px;
+        background: #f5f5f5;
+        color: #333;
+        line-height: 1.6;
+    }
+    .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+        color: #2c3e50;
+        border-bottom: 3px solid #3498db;
+        padding-bottom: 15px;
+        margin-top: 0;
+    }
+    h2 {
+        color: #34495e;
+        border-bottom: 2px solid #ecf0f1;
+        padding-bottom: 10px;
+        margin-top: 40px;
+    }
+    h3 {
+        color: #7f8c8d;
+        margin-top: 30px;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        font-size: 14px;
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 12px;
+        text-align: left;
+    }
+    th {
+        background: #3498db;
+        color: white;
+        font-weight: 600;
+    }
+    tr:nth-child(even) {
+        background: #f9f9f9;
+    }
+    tr:hover {
+        background: #f1f1f1;
+    }
+    code {
+        background: #f4f4f4;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: 'Consolas', 'Monaco', monospace;
+        font-size: 13px;
+    }
+    pre {
+        background: #2c3e50;
+        color: #ecf0f1;
+        padding: 20px;
+        border-radius: 5px;
+        overflow-x: auto;
+        font-size: 13px;
+    }
+    pre code {
+        background: transparent;
+        color: inherit;
+        padding: 0;
+    }
+    .diagram-container {
+        text-align: center;
+        margin: 30px 0;
+        padding: 20px;
+        background: #fafafa;
+        border-radius: 8px;
+        border: 1px solid #eee;
+    }
+    .diagram-container img {
+        max-width: 100%;
+        height: auto;
+    }
+    .diagram-title {
+        font-weight: bold;
+        color: #666;
+        margin-bottom: 15px;
+        font-size: 14px;
+    }
+    .mermaid-code {
+        display: none;
+    }
+    .note {
+        background: #fff3cd;
+        border-left: 4px solid #ffc107;
+        padding: 15px;
+        margin: 20px 0;
+        border-radius: 0 5px 5px 0;
+    }
+    .info {
+        background: #d1ecf1;
+        border-left: 4px solid #17a2b8;
+        padding: 15px;
+        margin: 20px 0;
+        border-radius: 0 5px 5px 0;
+    }
+    ul, ol {
+        margin: 15px 0;
+        padding-left: 30px;
+    }
+    li {
+        margin: 8px 0;
+    }
+    hr {
+        border: none;
+        border-top: 2px solid #ecf0f1;
+        margin: 40px 0;
+    }
+    .header-info {
+        background: #3498db;
+        color: white;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+    }
+    .header-info h1 {
+        color: white;
+        border-bottom-color: rgba(255,255,255,0.3);
+        margin: 0;
+    }
+    .toc {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        margin: 20px 0;
+    }
+    .toc h3 {
+        margin-top: 0;
+    }
+    .toc ul {
+        list-style-type: none;
+        padding-left: 0;
+    }
+    .toc li {
+        margin: 10px 0;
+    }
+    .toc a {
+        color: #3498db;
+        text-decoration: none;
+    }
+    .toc a:hover {
+        text-decoration: underline;
+    }
+    @media print {
+        body {
+            background: white;
+            padding: 0;
+        }
+        .container {
+            box-shadow: none;
+            padding: 20px;
+        }
+        .diagram-container {
+            page-break-inside: avoid;
+        }
+    }
+</style>
+
+</head>
+<body>
+    <div class="container">
+        <h1>Arquitectura de Infraestructura - Sistema de Gestión de Archivos IGAC</h1>
+<h2>Resumen de Infraestructura</h2>
+<ul>
+<li><strong>Orquestación:</strong> Docker Compose v3.8</li>
+<li><strong>Total de Servicios:</strong> 7 contenedores</li>
+<li><strong>Red:</strong> Bridge (server_archivo_network)</li>
+<li><strong>Almacenamiento:</strong> PostgreSQL + Redis + NAS NetApp</li></p>
+<p></ol>
+<hr>
+<h2>Diagrama de Arquitectura General</h2>
+<div class="diagram-container">
+    <div class="diagram-title">Diagrama 1</div>
+    <img src="imagenes/02_arquitectura_infraestructura_diagrama_01.png" alt="Diagrama 1">
+</div>
+<hr>
+<h2>Diagrama de Contenedores Docker</h2>
+<div class="diagram-container">
+    <div class="diagram-title">Diagrama 2</div>
+    <img src="imagenes/02_arquitectura_infraestructura_diagrama_02.png" alt="Diagrama 2">
+</div>
+<hr>
+<h2>Diagrama de Puertos y Comunicación</h2>
+<div class="diagram-container">
+    <div class="diagram-title">Diagrama 3</div>
+    <img src="imagenes/02_arquitectura_infraestructura_diagrama_03.png" alt="Diagrama 3">
+</div>
+<hr>
+<h2>Diagrama de Volúmenes y Almacenamiento</h2>
+<div class="diagram-container">
+    <div class="diagram-title">Diagrama 4</div>
+    <img src="imagenes/02_arquitectura_infraestructura_diagrama_04.png" alt="Diagrama 4">
+</div>
+<hr>
+<h2>Diagrama de Dependencias de Servicios</h2>
+<div class="diagram-container">
+    <div class="diagram-title">Diagrama 5</div>
+    <img src="imagenes/02_arquitectura_infraestructura_diagrama_05.png" alt="Diagrama 5">
+</div>
+<hr>
+<h2>Diagrama de Flujo de Datos</h2>
+<div class="diagram-container">
+    <div class="diagram-title">Diagrama 6</div>
+    <img src="imagenes/02_arquitectura_infraestructura_diagrama_06.png" alt="Diagrama 6">
+</div>
+<hr>
+<h2>Tabla de Configuración de Servicios</h2>
+<h3>Servicios de Infraestructura</h3>
+<table>
+<thead>
+<tr>
+<th>Servicio</th>
+<th>Imagen</th>
+<th>Puerto Ext</th>
+<th>Puerto Int</th>
+<th>Volúmenes</th>
+<th>Healthcheck</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PostgreSQL</td>
+<td>postgres:15-alpine</td>
+<td>5433</td>
+<td>5432</td>
+<td>./postgres_data</td>
+<td>pg_isready -U postgres</td>
+</tr>
+<tr>
+<td>Redis</td>
+<td>redis:7-alpine</td>
+<td>6379</td>
+<td>6379</td>
+<td>./redis_data</td>
+<td>redis-cli ping</td>
+</tr>
+</tbody>
+</table>
+<h3>Servicios de Aplicación</h3>
+<table>
+<thead>
+<tr>
+<th>Servicio</th>
+<th>Build</th>
+<th>Puerto Ext</th>
+<th>Puerto Int</th>
+<th>Volúmenes</th>
+<th>Dependencias</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Backend</td>
+<td>./backend/Dockerfile</td>
+<td>8000</td>
+<td>8000</td>
+<td>./backend, NETAPP</td>
+<td>postgres(healthy), redis(healthy)</td>
+</tr>
+<tr>
+<td>Frontend</td>
+<td>./frontend/Dockerfile</td>
+<td>4545</td>
+<td>4545</td>
+<td>./frontend</td>
+<td>backend</td>
+</tr>
+</tbody>
+</table>
+<h3>Servicios de Procesamiento</h3>
+<table>
+<thead>
+<tr>
+<th>Servicio</th>
+<th>Build</th>
+<th>Comando</th>
+<th>Volúmenes</th>
+<th>Dependencias</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Celery Worker</td>
+<td>./backend/Dockerfile</td>
+<td>celery -A config worker -l INFO</td>
+<td>./backend, NETAPP</td>
+<td>postgres(healthy), redis(healthy)</td>
+</tr>
+<tr>
+<td>Celery Beat</td>
+<td>./backend/Dockerfile</td>
+<td>celery -A config beat -l INFO</td>
+<td>./backend, NETAPP</td>
+<td>celery_worker</td>
+</tr>
+</tbody>
+</table>
+<h3>Servicios de Proxy</h3>
+<table>
+<thead>
+<tr>
+<th>Servicio</th>
+<th>Imagen</th>
+<th>Puertos</th>
+<th>Volúmenes</th>
+<th>Dependencias</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nginx</td>
+<td>nginx:alpine</td>
+<td>80, 443</td>
+<td>./nginx, static, media, dist</td>
+<td>backend, frontend</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2>Variables de Entorno Críticas</h2>
+<h3>Base de Datos</h3>
+``<code>env
+POSTGRES_DB=gestion_archivo_db
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=<strong><em></strong></em>**
+POSTGRES_HOST=postgres
+POSTGRES_PORT=5432
+</code>`<code></p>
+<h3>Redis/Celery</h3>
+</code>`<code>env
+REDIS_HOST=redis
+REDIS_PORT=6379
+CELERY_BROKER_URL=redis://redis:6379/2
+CELERY_RESULT_BACKEND=redis://redis:6379/2
+</code>`<code></p>
+<h3>Django</h3>
+</code>`<code>env
+DEBUG=False
+DJANGO_SECRET_KEY=<strong><em></strong></em>**
+ALLOWED_HOSTS=localhost,127.0.0.1,gestionarchivo.igac.gov.co
+JWT_SECRET_KEY=<strong><em></strong></em>**
+</code>`<code></p>
+<h3>Almacenamiento NAS</h3>
+</code>`<code>env
+NETAPP_BASE_PATH=/mnt/repositorio/2510SP/H_Informacion_Consulta/Sub_Proy
+SMB_SERVER=172.21.54.24
+SMB_SHARE=DirGesCat
+TRASH_PATH=04_bk/bk_temp_subproy/.trash
+MESSAGE_ATTACHMENTS_PATH=04_bk/trans_doc_platform/message_attachments
+</code>`<code></p>
+<h3>Servicios Externos</h3>
+</code>`<code>env
+GROQ_MODEL=llama-3.3-70b-versatile
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+DOMAIN=gestionarchivo.igac.gov.co
+</code>``</p>
+<hr>
+<h2>Notas de Implementación</h2>
+<h3>Alta Disponibilidad</h3>
+<ul>
+<li>PostgreSQL con volumen persistente para datos</li>
+<li>Redis con AOF (Append Only File) para persistencia</li>
+<li>Nginx como punto único de entrada con SSL</li></p>
+<p></ol>
+<h3>Escalabilidad</h3>
+<ul>
+<li>Celery workers pueden escalar horizontalmente</li>
+<li>Frontend estático servido por Nginx (cacheable)</li>
+<li>Backend stateless (sesiones en Redis)</li></p>
+<p></ol>
+<h3>Seguridad</h3>
+<ul>
+<li>SSL/TLS termination en Nginx</li>
+<li>JWT para autenticación stateless</li>
+<li>Secrets en variables de entorno (.env)</li>
+<li>Rate limiting en Nginx</li></p>
+<p></ol>
+<h3>Monitoreo</h3>
+<ul>
+<li>Healthchecks en PostgreSQL y Redis</li>
+<li>Logs centralizados en Docker</li>
+<li>Auditoría completa en base de datos</li></p>
+<p></ul>
+    </div>
+</body>
+</html>

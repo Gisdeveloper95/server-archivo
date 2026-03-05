@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Permisos de Ruta Modificados - Grupo</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background-color: #f4f4f4; }
+        .container { max-width: 650px; margin: 20px auto; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .header { background-color: #ff9800; color: white; padding: 40px 30px; text-align: center; }
+        .header h1 { margin: 0 0 10px 0; font-size: 28px; font-weight: 600; color: white; }
+        .header p { margin: 0; font-size: 14px; opacity: 0.95; color: white; }
+        .content { padding: 30px; }
+        .greeting { font-size: 16px; margin-bottom: 20px; }
+        .info-box { background: #f8f9fa; padding: 20px; margin: 20px 0; border-left: 4px solid #ff9800; border-radius: 6px; }
+        .info-box h3 { margin: 0 0 15px 0; font-size: 18px; color: #ff9800; }
+        .info-box p { margin: 8px 0; font-size: 14px; }
+        .permissions { background-color: #fff3e0; padding: 20px; border-radius: 8px; margin: 20px 0; }
+        .permissions h3 { margin: 0 0 15px 0; font-size: 18px; color: #e65100; }
+        .permissions ul { list-style: none; padding: 0; margin: 10px 0; }
+        .permissions ul li { padding: 8px 0; padding-left: 25px; position: relative; color: #37474f; }
+        .permissions ul li::before { content: "✓"; position: absolute; left: 0; color: #ff9800; font-weight: bold; font-size: 16px; }
+        .code { background: #f5f5f5; padding: 12px; border-radius: 6px; font-family: 'Courier New', monospace; font-size: 13px; word-break: break-all; border: 1px solid #e0e0e0; }
+        .cta-button { display: inline-block; padding: 14px 30px; background-color: #ff9800; color: white !important; text-decoration: none; border-radius: 6px; font-weight: 600; margin: 20px 0; }
+        .cta-button:hover { background-color: #f57c00; }
+        .footer { background: #f8f9fa; padding: 25px; text-align: center; border-top: 1px solid #e0e0e0; }
+        .footer p { margin: 5px 0; color: #666; font-size: 12px; }
+        .blocked-section { background: #ffebee; border-left: 4px solid #f44336; padding: 15px; border-radius: 6px; margin: 15px 0; }
+        .readonly-section { background: #e3f2fd; border-left: 4px solid #2196f3; padding: 15px; border-radius: 6px; margin: 15px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔄 Permisos de Ruta Modificados</h1>
+            <p>Sistema de Gestión de Archivos - IGAC</p>
+        </div>
+
+        <div class="content">
+            <div class="greeting">
+                <p>Estimado/a <strong>{{ user_name }}</strong>,</p>
+            </div>
+
+            <p style="margin-bottom: 20px;">
+                Los permisos de una ruta en su grupo <strong>"{{ group_name }}"</strong> han sido <strong style="color: #ff9800;">MODIFICADOS</strong>.
+            </p>
+
+            <div class="info-box">
+                <h3>📁 Ruta Modificada</h3>
+                <div class="code">{{ route_display }}</div>
+            </div>
+
+            <div class="permissions">
+                <h3>🔑 Permisos Actuales</h3>
+                <ul>
+                    {% if can_read %}<li><strong>Lectura:</strong> Puede visualizar y descargar archivos</li>{% endif %}
+                    {% if can_write %}<li><strong>Escritura:</strong> Puede cargar y modificar archivos</li>{% endif %}
+                    {% if can_delete %}<li><strong>Eliminación:</strong> Puede eliminar archivos y carpetas</li>{% endif %}
+                    {% if can_create_directories %}<li><strong>Crear Directorios:</strong> Puede crear nuevas carpetas</li>{% endif %}
+                </ul>
+            </div>
+
+            {% if blocked_paths %}
+            <div class="blocked-section">
+                <h3 style="color: #d32f2f; margin: 0 0 10px 0; font-size: 16px;">🚫 Rutas Bloqueadas</h3>
+                <ul style="list-style: none; padding: 0; margin: 0;">
+                    {% for path in blocked_paths %}
+                    <li style="font-family: 'Courier New', monospace; font-size: 12px; padding: 4px 0;">→ {{ path }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            {% if read_only_paths %}
+            <div class="readonly-section">
+                <h3 style="color: #1976d2; margin: 0 0 10px 0; font-size: 16px;">👁️ Solo Lectura</h3>
+                <ul style="list-style: none; padding: 0; margin: 0;">
+                    {% for path in read_only_paths %}
+                    <li style="font-family: 'Courier New', monospace; font-size: 12px; padding: 4px 0;">→ {{ path }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            <div style="text-align: center; margin: 30px 0;">
+                <p style="margin-bottom: 15px; font-size: 15px;">Para acceder al sistema:</p>
+                <a href="{{ frontend_url }}" class="cta-button">🌐 Acceder al Sistema</a>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>Instituto Geográfico Agustín Codazzi (IGAC)</strong></p>
+            <p>Sistema de Gestión de Archivos</p>
+            <p style="margin-top: 15px; font-size: 11px; color: #999;">
+                Este es un correo electrónico automático. Por favor no responda a este mensaje.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

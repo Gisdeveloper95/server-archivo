@@ -1,0 +1,24 @@
+graph TB
+    TREE["useTreeData<br/>getTree, navigate"]
+    SORT["useFileSort<br/>sortBy, filterBy"]
+    CLIP["useClipboard<br/>copy, paste, move"]
+    PERMS["usePathPermissions<br/>hasPermission"]
+    MODAL["useModal<br/>openModal, closeModal"]
+    TOAST["useToast<br/>showToast"]
+    THEME["useTheme<br/>toggleTheme"]
+    
+    TREE -->|Usa| S1["authStore"]
+    SORT -->|Usa| S1
+    CLIP -->|Usa| S2["clipboardStore"]
+    PERMS -->|Usa| S1
+    MODAL -->|Usa| S2
+    TOAST -->|Usa| S3["notificationStore"]
+    THEME -->|Usa| CTX["ThemeContext"]
+    
+    TREE -->|Llama| A1["files.ts"]
+    CLIP -->|Llama| A2["fileOps.ts"]
+    
+    style TREE fill:#99ccff
+    style SORT fill:#99ccff
+    style CLIP fill:#99ccff
+    style PERMS fill:#99ccff

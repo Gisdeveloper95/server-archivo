@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notificación de Modificación de Permisos</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background-color: #f4f4f4; }
+        .container { max-width: 650px; margin: 20px auto; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .header { background-color: #673ab7; color: white; padding: 40px 30px; text-align: center; }
+        .header h1 { margin: 0 0 10px 0; font-size: 28px; font-weight: 600; color: white; }
+        .header p { margin: 0; font-size: 14px; opacity: 0.95; color: white; }
+        .content { padding: 30px; }
+        .greeting { font-size: 16px; margin-bottom: 20px; }
+        .info-box { background: #f8f9fa; padding: 20px; margin: 20px 0; border-left: 4px solid #673ab7; border-radius: 6px; }
+        .info-box h3 { margin: 0 0 15px 0; font-size: 18px; color: #673ab7; display: flex; align-items: center; gap: 8px; }
+        .info-box p { margin: 8px 0; font-size: 14px; }
+        .highlight { color: #673ab7; font-weight: 600; }
+        .meta-info { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
+        .meta-item { background: white; padding: 12px; border-radius: 6px; border: 1px solid #e0e0e0; }
+        .meta-label { font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+        .meta-value { font-size: 14px; font-weight: 600; color: #333; }
+        .cta-button { display: inline-block; padding: 14px 30px; background-color: #673ab7; color: white !important; text-decoration: none; border-radius: 6px; font-weight: 600; margin: 20px 0; }
+        .cta-button:hover { background-color: #5e35b1; }
+        .footer { background: #f8f9fa; padding: 25px; text-align: center; border-top: 1px solid #e0e0e0; }
+        .footer p { margin: 5px 0; color: #666; font-size: 12px; }
+        .code { background: #f5f5f5; padding: 12px; border-radius: 6px; font-family: 'Courier New', monospace; font-size: 13px; word-break: break-all; border: 1px solid #e0e0e0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>📧 Copia de Modificación de Permisos</h1>
+            <p>Sistema de Gestión de Archivos - IGAC</p>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <div class="greeting">
+                <p>Estimado/a <strong>{{ leader_name }}</strong>,</p>
+            </div>
+
+            <p style="margin-bottom: 20px;">
+                Se ha realizado una <strong style="color: #ff9800;">modificación de permisos</strong> en el Sistema de Gestión de Archivos del IGAC.
+                Esta es una copia para su conocimiento.
+            </p>
+
+            <!-- User Info -->
+            <div class="info-box">
+                <h3>👤 Usuario Afectado</h3>
+                <p><strong>{{ user_name }}</strong></p>
+                <p style="font-size: 13px; color: #666;">{{ user_email }}</p>
+            </div>
+
+            <!-- Route Info -->
+            <div class="info-box">
+                <h3>📁 Ruta Modificada</h3>
+                <div class="code">{{ base_path }}</div>
+            </div>
+
+            <!-- Stats -->
+            <div class="info-box">
+                <h3>📊 Resumen</h3>
+                <div class="meta-info">
+                    <div class="meta-item">
+                        <div class="meta-label">Grupo/Contexto</div>
+                        <div class="meta-value">{{ group_name }}</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Usuarios</div>
+                        <div class="meta-value">{{ total_users }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Excel Attachment Note -->
+            <div class="info-box" style="background: #fff3e0; border-left-color: #ff9800;">
+                <h3 style="color: #f57c00;">📎 Archivo Adjunto</h3>
+                <p>Se adjunta un reporte en Excel con el detalle completo de los permisos modificados.</p>
+            </div>
+
+            <!-- Access System -->
+            <div style="text-align: center; margin: 30px 0;">
+                <p style="margin-bottom: 15px; font-size: 15px;">Para revisar los permisos en el sistema:</p>
+                <a href="{{ frontend_url }}" class="cta-button">🌐 Acceder al Sistema</a>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p><strong>Instituto Geográfico Agustín Codazzi (IGAC)</strong></p>
+            <p>Sistema de Gestión de Archivos</p>
+            <p style="margin-top: 15px; font-size: 11px; color: #999;">
+                Este es un correo electrónico automático. Por favor no responda a este mensaje.
+            </p>
+            <p style="font-size: 11px; color: #999;">
+                Si tiene preguntas, contacte al administrador del sistema.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

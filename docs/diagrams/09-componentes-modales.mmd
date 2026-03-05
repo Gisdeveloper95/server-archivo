@@ -1,0 +1,26 @@
+graph TB
+    FE["FileExplorer<br/>Página Principal"]
+    
+    FE -->|Abre| UP["UploadModal"]
+    FE -->|Abre| CF["CreateFolderModal"]
+    FE -->|Abre| RN["RenameModal"]
+    FE -->|Abre| DL["DeleteConfirmModal"]
+    FE -->|Abre| MG["ManageAccessModal"]
+    FE -->|Abre| SH["ShareLinkModal"]
+    
+    UP -->|Llama| API["API fileOps"]
+    CF -->|Llama| API
+    RN -->|Llama| API
+    DL -->|Llama| API
+    MG -->|Llama| API
+    SH -->|Llama| API
+    
+    API -->|Actualiza| STORE["notificationStore"]
+    STORE -->|Notifica| FE
+    
+    style FE fill:#99ccff
+    style UP fill:#ffcccc
+    style CF fill:#ffcccc
+    style RN fill:#ffcccc
+    style DL fill:#ffcccc
+    style API fill:#ffcc99

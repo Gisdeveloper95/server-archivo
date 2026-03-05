@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>ERD Completo - Sistema IGAC</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f0f0f0;
+            overflow: hidden;
+        }
+        .toolbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #2c3e50;
+            color: white;
+            padding: 15px 20px;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        .toolbar h1 {
+            font-size: 18px;
+            font-weight: 500;
+        }
+        .toolbar-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .toolbar button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+        .toolbar button:hover {
+            background: #2980b9;
+        }
+        .zoom-info {
+            font-size: 14px;
+            background: rgba(255,255,255,0.1);
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+        .container {
+            margin-top: 60px;
+            width: 100vw;
+            height: calc(100vh - 60px);
+            overflow: auto;
+            cursor: grab;
+            background:
+                linear-gradient(90deg, #e0e0e0 1px, transparent 1px),
+                linear-gradient(#e0e0e0 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        .container:active {
+            cursor: grabbing;
+        }
+        .svg-wrapper {
+            display: inline-block;
+            padding: 50px;
+            min-width: 100%;
+            min-height: 100%;
+        }
+        .svg-wrapper img {
+            display: block;
+            max-width: none;
+            background: white;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            border-radius: 8px;
+        }
+        .instructions {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(44, 62, 80, 0.9);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+        .instructions strong {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="toolbar">
+        <h1>ERD Completo - Sistema IGAC</h1>
+        <div class="toolbar-buttons">
+            <button onclick="zoomIn()">+ Zoom</button>
+            <button onclick="zoomOut()">- Zoom</button>
+            <button onclick="resetZoom()">100%</button>
+            <button onclick="fitToScreen()">Ajustar</button>
+            <span class="zoom-info" id="zoomLevel">100%</span>
+            <button onclick="printDiagram()">Imprimir / PDF</button>
+        </div>
+    </div>
+
+    <div class="container" id="container">
+        <div class="svg-wrapper">
+            <img id="diagram" src="ERD_completo_IGAC.svg" alt="ERD Completo - Sistema IGAC">
+        </div>
+    </div>
+
+    <div class="instructions">
+        <strong>Controles:</strong>
+        Rueda del mouse = Zoom<br>
+        Arrastrar = Mover<br>
+        Doble clic = Zoom in
+    </div>
+
+    <script>
+        let zoom = 1;
+        const img = document.getElementById('diagram');
+        const container = document.getElementById('container');
+        const zoomDisplay = document.getElementById('zoomLevel');
+
+        function updateZoom() {
+            img.style.transform = `scale(${zoom})`;
+            img.style.transformOrigin = 'top left';
+            zoomDisplay.textContent = Math.round(zoom * 100) + '%';
+        }
+
+        function zoomIn() {
+            zoom = Math.min(zoom * 1.25, 5);
+            updateZoom();
+        }
+
+        function zoomOut() {
+            zoom = Math.max(zoom / 1.25, 0.1);
+            updateZoom();
+        }
+
+        function resetZoom() {
+            zoom = 1;
+            updateZoom();
+        }
+
+        function fitToScreen() {
+            const containerRect = container.getBoundingClientRect();
+            const imgRect = img.getBoundingClientRect();
+            const scaleX = (containerRect.width - 100) / (img.naturalWidth || imgRect.width);
+            const scaleY = (containerRect.height - 100) / (img.naturalHeight || imgRect.height);
+            zoom = Math.min(scaleX, scaleY, 1);
+            updateZoom();
+        }
+
+        function printDiagram() {
+            window.print();
+        }
+
+        // Mouse wheel zoom
+        container.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            if (e.deltaY < 0) {
+                zoomIn();
+            } else {
+                zoomOut();
+            }
+        });
+
+        // Double click to zoom in
+        img.addEventListener('dblclick', () => {
+            zoomIn();
+        });
+
+        // Drag to pan
+        let isDragging = false;
+        let startX, startY, scrollLeft, scrollTop;
+
+        container.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            startX = e.pageX - container.offsetLeft;
+            startY = e.pageY - container.offsetTop;
+            scrollLeft = container.scrollLeft;
+            scrollTop = container.scrollTop;
+        });
+
+        container.addEventListener('mouseleave', () => {
+            isDragging = false;
+        });
+
+        container.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
+
+        container.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            e.preventDefault();
+            const x = e.pageX - container.offsetLeft;
+            const y = e.pageY - container.offsetTop;
+            const walkX = (x - startX) * 1.5;
+            const walkY = (y - startY) * 1.5;
+            container.scrollLeft = scrollLeft - walkX;
+            container.scrollTop = scrollTop - walkY;
+        });
+    </script>
+</body>
+</html>

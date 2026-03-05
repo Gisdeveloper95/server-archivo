@@ -1,0 +1,112 @@
+================================================================================
+     DOCUMENTACION TECNICA - SISTEMA DE GESTION DE ARCHIVOS IGAC
+================================================================================
+
+Fecha de generacion: Enero 2025
+Version: 1.0.0
+
+--------------------------------------------------------------------------------
+CONTENIDO DEL PAQUETE
+--------------------------------------------------------------------------------
+
+Este paquete contiene la documentacion tecnica completa del Sistema de Gestion
+de Archivos NetApp desarrollado para el IGAC.
+
+ARCHIVOS HTML:
+--------------
+  00_INDICE.html              - Indice general y resumen del proyecto
+  01_ERD_modelo_datos.html    - Diagrama de Base de Datos (19 modelos)
+  02_arquitectura_infraestructura.html - Arquitectura Docker/Servidores
+  03_arquitectura_frontend.html - Arquitectura React/Frontend
+  04_flujos_usuario.html      - Flujos de usuario (20+ diagramas)
+  05_api_endpoints.html       - Documentacion de API REST (100+ endpoints)
+
+CARPETA imagenes/:
+------------------
+  Contiene 39 diagramas en formato PNG, incluyendo:
+  - Diagrama ERD completo de la base de datos
+  - Arquitectura de contenedores Docker
+  - Flujos de secuencia de todas las operaciones
+  - Diagramas de componentes React
+  - Diagramas de seguridad y autenticacion
+
+--------------------------------------------------------------------------------
+COMO VER LA DOCUMENTACION
+--------------------------------------------------------------------------------
+
+OPCION 1 - NAVEGADOR WEB (Recomendado):
+  1. Abrir cualquier archivo .html con doble clic
+  2. Se abrira en su navegador (Chrome, Edge, Firefox)
+  3. Los diagramas se veran automaticamente
+
+OPCION 2 - MICROSOFT WORD:
+  1. Abrir Microsoft Word
+  2. Archivo -> Abrir -> Seleccionar el archivo .html
+  3. Word convertira el HTML a formato editable
+  4. Puede guardarlo como .docx si lo desea
+
+OPCION 3 - IMPRIMIR A PDF:
+  1. Abrir el archivo .html en el navegador
+  2. Presionar Ctrl+P (o Cmd+P en Mac)
+  3. En "Destino" seleccionar "Guardar como PDF"
+  4. Ajustar margenes si es necesario
+  5. Clic en "Guardar"
+
+OPCION 4 - GOOGLE DOCS:
+  1. Ir a drive.google.com
+  2. Arrastrar el archivo .html a Google Drive
+  3. Clic derecho -> Abrir con -> Google Docs
+
+--------------------------------------------------------------------------------
+DESCRIPCION DE CADA DOCUMENTO
+--------------------------------------------------------------------------------
+
+1. INDICE (00_INDICE.html)
+   - Resumen ejecutivo del sistema
+   - Stack tecnologico utilizado
+   - Estadisticas del codigo
+   - Requisitos del sistema
+
+2. MODELO DE DATOS (01_ERD_modelo_datos.html)
+   - Diagrama Entidad-Relacion completo
+   - 19 modelos de base de datos
+   - 37 relaciones entre tablas
+   - Descripcion de cada campo
+
+3. ARQUITECTURA DE INFRAESTRUCTURA (02_arquitectura_infraestructura.html)
+   - 7 contenedores Docker documentados
+   - Flujo de comunicacion entre servicios
+   - Puertos y volumenes
+   - Variables de entorno
+
+4. ARQUITECTURA FRONTEND (03_arquitectura_frontend.html)
+   - 82 componentes React
+   - 19 paginas/vistas
+   - Sistema de rutas y permisos
+   - Hooks y stores
+
+5. FLUJOS DE USUARIO (04_flujos_usuario.html)
+   - Login/Logout
+   - Navegacion de archivos
+   - Subida y descarga
+   - Renombrado con IA
+   - Sistema de permisos
+   - Papelera de reciclaje
+   - Compartir archivos
+
+6. API ENDPOINTS (05_api_endpoints.html)
+   - 100+ endpoints documentados
+   - Ejemplos de request/response
+   - Codigos de error
+   - Autenticacion JWT
+
+--------------------------------------------------------------------------------
+SOPORTE
+--------------------------------------------------------------------------------
+
+Para consultas tecnicas sobre esta documentacion:
+
+  Direccion de Gestion Catastral
+  Instituto Geografico Agustin Codazzi (IGAC)
+
+================================================================================

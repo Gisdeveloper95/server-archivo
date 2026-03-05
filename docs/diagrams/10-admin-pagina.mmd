@@ -1,0 +1,23 @@
+graph TB
+    AD["Administration<br/>Página Admin"]
+    
+    AD -->|Tab 1| US["UserManagement"]
+    AD -->|Tab 2| PM["PermissionManagement"]
+    AD -->|Tab 3| GM["GroupManagement"]
+    
+    US -->|Abre| CU["CreateUserModal"]
+    US -->|Abre| EU["EditUserModal"]
+    US -->|Llama| UAPI["users.ts"]
+    
+    PM -->|Abre| AP["AssignPermissionModal"]
+    PM -->|Llama| AAPI["admin.ts"]
+    
+    UAPI -->|API| BE["Backend"]
+    AAPI -->|API| BE
+    BE -->|Respuesta| ST["Store"]
+    ST -->|Actualiza| AD
+    
+    style AD fill:#ffcc99
+    style US fill:#ffcccc
+    style PM fill:#ffcccc
+    style GM fill:#ffcccc

@@ -1,0 +1,183 @@
+graph TD
+    subgraph "FLUJO 1: USUARIO RENOMBRA ARCHIVO CON AYUDA IA"
+        A["Usuario abre RenameModal<br/>Archivo: 'Nueva_Autorización'"]
+        B["Mostrar campo input<br/>Validación en tiempo real contra 12 reglas"]
+        C["Usuario cliclea<br/>'Obtener Sugerencia IA'"]
+        D["POST /api/files/suggest-rename"]
+        E["Body: {<br/>current_name: 'Nueva_Autorización'<br/>file_extension: '.pdf'<br/>}"]
+        F["BACKEND: DictionaryValidator"]
+        F1["validate_against_rules()"]
+        F1A["Rule 1: ¿Minúsculas?<br/>✗ Tiene mayúscula 'N'"]
+        F1B["Rule 2: ¿Sin tildes?<br/>✗ Tiene 'á' en Autorización"]
+        F1C["Rule 3: ¿Sin conectores?<br/>✗ Falta '_de_' → '_'"]
+        F1D["Rule 4-7: ✓ OK"]
+        F1E["Rule 8: ¿Fecha al inicio?<br/>? Sin fecha"]
+        F1F["Rule 9: ¿Sin genéricas?<br/>✗ 'Nueva' es genérica"]
+        F1G["Rule 10-11: ✓ OK"]
+        F1H["Rule 12: ¿Diccionario?<br/>Buscar 'autorizacion':<br/>DictionaryEntry.filter(key='autoriz')<br/>✓ Encontrado"]
+        G["Violations: [1, 2, 3, 9]"]
+        H["BACKEND: GroqAIService"]
+        H1["suggest_rename()"]
+        H2["Construir prompt:<br/>---<br/>Nombre: nueva_autorización<br/>Violations: 1,2,3,9<br/>Diccionario: autoriz<br/>12 Reglas: [listar]<br/>Sugiere UN nombre<br/>---"]
+        I["Llamar Groq API"]
+        I1["POST groq.api.com/messages<br/>model: mixtral-8x7b<br/>messages: [prompt]"]
+        J["IA retorna sugerencia<br/>'20250116_autoriz'"]
+        K["BACKEND: Validar resultado"]
+        K1["validate_against_rules('20250116_autoriz')"]
+        K2["Rule 1-2: ✓ Minúsculas, sin tildes<br/>Rule 3-7: ✓ OK<br/>Rule 8: ✓ Fecha al inicio<br/>Rule 9: ✓ Sin genéricas<br/>Rule 12: ✓ Diccionario"]
+        K3["is_valid = true<br/>score = 100"]
+        L["Retornar respuesta"]
+        L1["{<br/>current: 'Nueva_Autorización'<br/>suggested: '20250116_autoriz.pdf'<br/>violations: [1,2,3,9]<br/>explanation: 'Agregada fecha, eliminada genérica...'<br/>confidence: 97<br/>}"]
+        M["FRONTEND: Mostrar resultado"]
+        M1["Nombre actual (ROJO):<br/>Nueva_Autorización ✗<br/>Violations: 4/12 reglas"]
+        M2["Sugerencia IA (VERDE):<br/>20250116_autoriz.pdf ✓<br/>Todas las reglas OK"]
+        M3["Tabla de cambios:<br/>Rule 1: Nueva → nueva<br/>Rule 2: á → a<br/>Rule 3: '_de_' → '_'<br/>Rule 8: agregada fecha<br/>Rule 9: 'Nueva' eliminada"]
+        N["Botón: 'Aceptar Sugerencia'"]
+        O["Usuario cliclea"]
+        P["Input cambia a<br/>'20250116_autoriz.pdf'"]
+        Q["Usuario cliclea 'Confirmar Renombrar'"]
+        R["POST /files/{id}/rename<br/>{new_name: '20250116_autoriz'}"]
+        S["BACKEND: Procesar rename"]
+        S1["Validar permisos"]
+        S2["Validar nombre con suggest_rename()"]
+        S3["Renombrar archivo en filesystem"]
+        S4["AuditLog: RENAME<br/>user: user1<br/>action: RENAME<br/>target: 20250116_autoriz<br/>details: {violations_fixed: [1,2,3,9]}<br/>success: true"]
+        T["Retornar éxito"]
+        U["FRONTEND: Toast éxito"]
+        U1["✓ Archivo renombrado a<br/>20250116_autoriz.pdf"]
+    end
+
+    subgraph "FLUJO 2: ABREVIAR PALABRA DESCONOCIDA"
+        B1["Usuario sube archivo<br/>nombre: '20250116_gestión_actividades'"]
+        B2["BACKEND: Procesar upload"]
+        B3["DictionaryValidator.check_rule_12()"]
+        B4["Extraer palabras:<br/>[20250116, gestión, actividades]"]
+        B5["Para cada palabra:"]
+        B5A["'20250116': formato fecha ✓"]
+        B5B["'gestión':<br/>Buscar DictionaryEntry<br/>NOT FOUND"]
+        B5B1["Buscar AIGeneratedAbbreviation<br/>NOT FOUND"]
+        B5B2["Palabra desconocida:<br/>Generar abreviación"]
+        B5B3["POST /ai/abbreviate"]
+        B5B4["Body: {word: 'gestión'}"]
+        B6["BACKEND: GroqAIService.abbreviate_word()"]
+        B7["Buscar en DictionaryEntry<br/>NOT FOUND"]
+        B8["Buscar en AIGeneratedAbbreviation<br/>NOT FOUND"]
+        B9["Llamar Groq para generar"]
+        B10["prompt: 'Abrevia a 3-5 chars: gestión'"]
+        B11["IA retorna: 'gest'"]
+        B12["Guardar en AIGeneratedAbbreviation"]
+        B13["{<br/>original_word: 'gestión'<br/>abbreviated_form: 'gest'<br/>status: 'pending'<br/>times_used: 1<br/>confidence: 89<br/>created_at: now<br/>}"]
+        B14["Retornar: {<br/>abbreviated: 'gest'<br/>source: 'ai_generated'<br/>status: 'pending'<br/>confidence: 89<br/>}"]
+        B15["FRONTEND: Mostrar aviso"]
+        B15A["⚠️ Abreviación pendiente:<br/>gestión → gest<br/>(No aprobada aún)<br/>Un administrador debe validarla"]
+        B16["Permitir upload de todas formas<br/>Nombre final: '20250116_gest_actividades'"]
+        B5C["'actividades':<br/>DictionaryEntry(key='activ')<br/>✓ Encontrado"]
+        B17["Completar upload"]
+    end
+
+    subgraph "FLUJO 3: ADMIN APRUEBA ABREVIACIONES"
+        C1["Admin entra a<br/>DictionaryManagement"]
+        C2["Click Tab 2: Abreviaciones IA"]
+        C3["setActiveTab = 'abbreviations'"]
+        C4["GET /api/ai-abbreviations/summary/"]
+        C5["Mostrar estadísticas:<br/>• Total: 245<br/>• Pendientes: 32<br/>• Aprobadas: 150<br/>• Rechazadas: 45"]
+        C6["GET /api/ai-abbreviations/<br/>?status=pending&page=1"]
+        C7["Mostrar tabla 50 items:<br/>original | abbreviated | status | times_used | confidence"]
+        C8["Tabla muestra:<br/>gestión | gest | pending | 15 | 89%"]
+        C9["Admin cliclea<br/>'Aprobar'"]
+        C10["POST /ai-abbreviations/5/approve/"]
+        C11["BACKEND: Actualizar status"]
+        C12["AIGeneratedAbbreviation<br/>id=5, status='pending'<br/>→ status='approved'"]
+        C13["AuditLog: APPROVE_ABBREVIATION<br/>user: admin<br/>abbreviation: gestión<br/>form: gest"]
+        C14["Retornar éxito"]
+        C15["FRONTEND: Actualizar tabla"]
+        C16["Fila se mueve a tab 'Aprobadas'<br/>Desaparece de 'Pendientes'"]
+        C17["Toast: ✓ Aprobada: gestión"]
+        C18["Admin cliclea<br/>'Agregar al Diccionario'"]
+        C19["POST /ai-abbreviations/5/add-to-dictionary/"]
+        C20["BACKEND: Crear entrada oficial"]
+        C21["DictionaryEntry.create({<br/>key: 'gest'<br/>value: 'gestión'<br/>is_active: true<br/>created_by: admin<br/>})"]
+        C22["AIGeneratedAbbreviation<br/>status='in_dictionary'"]
+        C23["Invalidar caché:<br/>Redis.delete('dict:all_entries')"]
+        C24["AuditLog: ADD_TO_DICTIONARY<br/>user: admin<br/>term: gest → gestión"]
+        C25["Retornar éxito"]
+        C26["FRONTEND: Toast"]
+        C26A["✓ Agregado al diccionario:<br/>gest → gestión"]
+        C27["Futuras palabras 'gestión':<br/>Siempre se abrevia 'gest'<br/>Sin pedir aprobación"]
+    end
+
+    subgraph "FLUJO 4: BULK OPERATIONS"
+        D1["Admin cliclea<br/>'Aprobar Todos Pendientes'"]
+        D2["POST /ai-abbreviations/bulk-approve/"]
+        D3["Body: {all_pending: true}"]
+        D4["BACKEND: Bulk update"]
+        D5["UPDATE AIGeneratedAbbreviation<br/>SET status='approved'<br/>WHERE status='pending'"]
+        D6["Actualizar 32 registros"]
+        D7["Crear 32 AuditLogs"]
+        D8["Invalidar caché"]
+        D9["Retornar: {<br/>updated: 32<br/>success: true<br/>}"]
+        D10["FRONTEND: Toast"]
+        D11["✓ 32 abreviaciones aprobadas"]
+        D12["Admin cliclea<br/>'Agregar al Diccionario'"]
+        D13["POST /ai-abbreviations/bulk-add-to-dictionary/"]
+        D14["Body: {all_approved: true}"]
+        D15["BACKEND: Crear entradas masivas"]
+        D16["Para cada aprobada:"]
+        D16A["Crear DictionaryEntry<br/>key=abbreviated<br/>value=original_word"]
+        D16B["Set status='in_dictionary'"]
+        D17["Crear 150 DictionaryEntry<br/>Crear 150 AuditLogs"]
+        D18["Invalidar caché diccionario"]
+        D19["Retornar: {<br/>created: 150<br/>success: true<br/>}"]
+        D20["FRONTEND: Toast"]
+        D21["✓ 150 términos agregados<br/>al diccionario oficial"]
+    end
+
+    A --> B --> C --> D --> E
+    E --> F --> F1
+    F1 --> F1A --> G
+    F1 --> F1B
+    F1 --> F1C
+    F1 --> F1D
+    F1 --> F1E
+    F1 --> F1F
+    F1 --> F1G
+    F1 --> F1H --> G
+    G --> H --> H1 --> H2 --> I --> I1 --> J
+    J --> K --> K1 --> K2 --> K3 --> L --> L1
+    L1 --> M --> M1
+    M --> M2
+    M --> M3
+    M2 --> N --> O --> P --> Q --> R
+    R --> S --> S1 --> S2 --> S3 --> S4 --> T --> U --> U1
+
+    B1 --> B2 --> B3 --> B4 --> B5
+    B5 --> B5A
+    B5 --> B5B --> B5B1 --> B5B2 --> B5B3 --> B5B4
+    B5B4 --> B6 --> B7 --> B8 --> B9 --> B10 --> B11
+    B11 --> B12 --> B13 --> B14 --> B15 --> B15A --> B16
+    B5 --> B5C --> B17
+    
+    C1 --> C2 --> C3 --> C4 --> C5
+    C5 --> C6 --> C7 --> C8 --> C9 --> C10
+    C10 --> C11 --> C12 --> C13 --> C14 --> C15 --> C16 --> C17
+    C17 --> C18 --> C19 --> C20 --> C21 --> C22 --> C23 --> C24 --> C25 --> C26 --> C26A
+    C26A --> C27
+
+    D1 --> D2 --> D3 --> D4 --> D5 --> D6 --> D7 --> D8 --> D9 --> D10 --> D11
+    D11 --> D12 --> D13 --> D14 --> D15 --> D16
+    D16 --> D16A --> D16B
+    D16B --> D17 --> D18 --> D19 --> D20 --> D21
+
+    classDef flujo1 fill:#06B6D4,stroke:#0E7490,color:#fff
+    classDef frontend fill:#10B981,stroke:#064E3B,color:#fff
+    classDef backend fill:#8B5CF6,stroke:#581C87,color:#fff
+    classDef api fill:#F59E0B,stroke:#92400E,color:#fff
+    classDef validacion fill:#EC4899,stroke:#831843,color:#fff
+    classDef exito fill:#10B981,stroke:#064E3B,color:#fff
+
+    class A,B,C,D,E,M,M1,M2,M3,N,O,P,Q,U,U1 flujo1
+    class B1,B2,B15,B15A,B16,C1,C2,C3,C8,C15,C16,C17,C26,C26A,D10,D11,D20,D21 frontend
+    class F,F1,F1A,F1B,F1C,F1D,F1E,F1F,F1G,F1H,G,H,H1,H2,I,I1,J,K,K1,K2,K3,L,L1,S,S1,S2,S3,S4,T,B6,B7,B8,B9,B10,B11,B12,B13,B14,C11,C12,C13,C14,C20,C21,C22,C23,C24,D4,D5,D6,D7,D8,D9,D15,D16,D16A,D16B,D17,D18,D19 backend
+    class R flujo1
+    class D,E,B5B3,B5B4,C10,C19 api
+    class F1,B3,B4,B5 validacion

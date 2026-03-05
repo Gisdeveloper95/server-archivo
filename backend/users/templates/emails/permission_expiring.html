@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notificación de Vencimiento de Permisos</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background-color: #f4f4f4; }
+        .container { max-width: 650px; margin: 20px auto; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .header { background-color: #ff6b6b; color: white; padding: 40px 30px; text-align: center; }
+        .header h1 { margin: 0 0 10px 0; font-size: 28px; font-weight: 600; color: white; }
+        .header p { margin: 0; font-size: 14px; opacity: 0.95; color: white; }
+        .content { padding: 30px; }
+        .alert-box { background-color: #fff3cd; border-left: 6px solid #ff9800; padding: 25px; border-radius: 8px; margin: 20px 0; }
+        .alert-box h2 { margin: 0 0 15px 0; color: #e65100; font-size: 22px; display: flex; align-items: center; gap: 10px; }
+        .alert-box p { margin: 10px 0; color: #5d4037; font-size: 15px; }
+        .countdown { text-align: center; background: white; padding: 30px; border-radius: 12px; margin: 25px 0; border: 3px solid #ff9800; }
+        .countdown-number { font-size: 56px; font-weight: bold; color: #d32f2f; margin: 0; line-height: 1; }
+        .countdown-label { font-size: 18px; color: #666; margin-top: 10px; }
+        .info-box { background: #f8f9fa; padding: 20px; margin: 20px 0; border-radius: 6px; border: 1px solid #e0e0e0; }
+        .info-box h3 { margin: 0 0 15px 0; font-size: 18px; color: #424242; }
+        .info-box p { margin: 8px 0; font-size: 14px; }
+        .code { background: #f5f5f5; padding: 12px; border-radius: 6px; font-family: 'Courier New', monospace; font-size: 13px; word-break: break-all; border: 1px solid #e0e0e0; margin: 10px 0; }
+        .cta-button { display: inline-block; padding: 14px 30px; background-color: #ff6b6b; color: white !important; text-decoration: none; border-radius: 6px; font-weight: 600; margin: 20px 0; transition: transform 0.2s; }
+        .cta-button:hover { transform: translateY(-2px); }
+        .footer { background: #f8f9fa; padding: 25px; text-align: center; border-top: 1px solid #e0e0e0; }
+        .footer p { margin: 5px 0; color: #666; font-size: 12px; }
+        .highlight { color: #d32f2f; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>⏰ Vencimiento de Permisos de Acceso</h1>
+            <p>Sistema de Gestión de Archivos - IGAC</p>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <p style="font-size: 16px; margin-bottom: 20px;">
+                Estimado/a <strong>{{ user_name }}</strong>,
+            </p>
+
+            <!-- Alert Principal -->
+            <div class="alert-box">
+                <h2>⚠️ Notificación Importante</h2>
+                <p style="font-size: 16px;">
+                    Sus permisos de acceso al Sistema de Gestión de Archivos están próximos a vencer.
+                </p>
+            </div>
+
+            <!-- Countdown -->
+            <div class="countdown">
+                <div class="countdown-number">{{ days_remaining }}</div>
+                <div class="countdown-label">día{{ days_remaining|pluralize }} restante{{ days_remaining|pluralize }}</div>
+                <p style="margin-top: 15px; font-size: 14px; color: #666;">
+                    Fecha de vencimiento: <strong style="color: #d32f2f;">{{ expires_at }}</strong>
+                </p>
+            </div>
+
+            <!-- Información del Permiso -->
+            <div class="info-box">
+                <h3>📁 Información del Permiso</h3>
+                <p><strong>Ruta asignada:</strong></p>
+                <div class="code">{{ base_path_display }}</div>
+                <p style="margin-top: 15px;"><strong>Fecha de asignación:</strong> {{ granted_at }}</p>
+                <p><strong>Otorgado por:</strong> {{ granted_by }}</p>
+            </div>
+
+            <!-- Qué Sucederá -->
+            <div class="info-box" style="background: #ffebee; border-color: #ef5350;">
+                <h3 style="color: #c62828;">🔒 ¿Qué sucederá cuando venza?</h3>
+                <ul style="margin: 15px 0; padding-left: 20px; color: #5d4037;">
+                    <li style="margin: 8px 0;">El permiso se <strong>desactivará automáticamente</strong></li>
+                    <li style="margin: 8px 0;">Ya <strong>no podrá acceder</strong> a la ruta asignada</li>
+                    <li style="margin: 8px 0;">Perderá todos los permisos de lectura, escritura y eliminación</li>
+                </ul>
+            </div>
+
+            <!-- Acción Requerida -->
+            <div class="info-box" style="background: #e8f5e9; border-color: #66bb6a;">
+                <h3 style="color: #2e7d32;">✅ ¿Necesita renovar sus permisos?</h3>
+                <p style="color: #1b5e20;">
+                    Si requiere mantener el acceso después de la fecha de vencimiento, contacte al
+                    administrador del sistema para solicitar una renovación o extensión del permiso.
+                </p>
+            </div>
+
+            <!-- Acceso al Sistema -->
+            <div style="text-align: center; margin: 30px 0;">
+                <p style="margin-bottom: 15px; font-size: 14px; color: #666;">
+                    Mientras sus permisos estén activos, puede acceder al sistema:
+                </p>
+                <a href="{{ frontend_url }}" class="cta-button">🌐 Acceder al Sistema</a>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p><strong>Instituto Geográfico Agustín Codazzi (IGAC)</strong></p>
+            <p>Sistema de Gestión de Archivos</p>
+            <p style="margin-top: 15px; font-size: 11px; color: #999;">
+                Este es un correo electrónico automático. Por favor no responda a este mensaje.
+            </p>
+            <p style="font-size: 11px; color: #999;">
+                Para solicitar renovación, contacte al administrador del sistema.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

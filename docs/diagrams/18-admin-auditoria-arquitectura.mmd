@@ -1,0 +1,181 @@
+graph TB
+    subgraph "ADMINISTRACIÓN - ORQUESTADOR CENTRAL"
+        ADM["<b>Administration.tsx</b><br/>Página con 2 tabs"]
+    end
+
+    subgraph "ESTADOS & DATOS"
+        TAB["activeTab:<br/>'users'|'permissions'"]
+        UM["Tab Users<br/>→ UserManagement"]
+        PM["Tab Permissions<br/>→ PermissionManagement"]
+    end
+
+    subgraph "TAB 1: GESTIÓN DE USUARIOS"
+        UMC["<b>UserManagement.tsx</b>"]
+        UMS["Estado 11 variables:<br/>users[], selectedUser<br/>loading, error<br/>5 flags modales"]
+        UMComp["Componentes:<br/>• CreateUserModal<br/>• EditUserModal<br/>• UserAuditModal<br/>• ToastContainer"]
+        UMFlow["Flujos:<br/>1. loadUsers()<br/>2. Crear usuario<br/>3. Editar usuario<br/>4. Ver auditoría<br/>5. Eliminar usuario<br/>6. Exportar CSV"]
+    end
+
+    subgraph "TAB 2: GESTIÓN DE PERMISOS"
+        PMC["<b>PermissionManagement.tsx</b>"]
+        PMS["Estado 13 variables:<br/>users[], selectedUser<br/>permissions[]<br/>loading, error<br/>activeTab: 'individual'|'bulk'|'groups'"]
+        PMTab1["<b>Tab 1: Individual</b><br/>AssignPermissionModal<br/>EditPermissionModal<br/>ViewPermissionModal"]
+        PMTab2["<b>Tab 2: Bulk</b><br/>BulkPermissionAssignment<br/>UserAutocompleteSelector<br/>RouteMultiInput"]
+        PMTab3["<b>Tab 3: Groups</b><br/>GroupManagement<br/>Crear/editar/eliminar grupos<br/>Gestionar miembros"]
+    end
+
+    subgraph "MODELO PERMISSION - COMPLEJO"
+        PERM["<b>Permission Model</b><br/>id, user, base_path<br/>can_read, can_write, can_delete<br/>can_create_directories<br/>exempt_from_dictionary"]
+        PERM2["inheritance_mode:<br/>• 'total' - Todos heredados<br/>• 'blocked' - No heredado<br/>• 'limited_depth' - N niveles"]
+        PERM3["edit_permission_level:<br/>• 'upload_only'<br/>• 'upload_own'<br/>• 'upload_all'"]
+        PERM4["Avanzado:<br/>blocked_paths[]<br/>read_only_subdirs[]<br/>max_depth<br/>expires_at<br/>notes"]
+    end
+
+    subgraph "BACKEND - ADMIN APIS"
+        BA1["GET /admin/users<br/>POST /admin/users<br/>PATCH /admin/users/{id}<br/>DELETE /admin/users/{id}"]
+        BA2["GET /admin/users/{id}/permissions<br/>POST /admin/permissions<br/>PATCH /admin/permissions/{id}<br/>DELETE /admin/permissions/{id}"]
+        BA3["POST /admin/permissions/bulk<br/>Asignar múltiples de una vez"]
+        BA4["GET /admin/groups<br/>POST /admin/groups<br/>PATCH /admin/groups/{id}<br/>DELETE /admin/groups/{id}"]
+    end
+
+    subgraph "AUDITORIA - ORQUESTADOR CENTRAL"
+        AUD["<b>Audit.tsx</b><br/>Página con 3 tabs<br/>1425 líneas"]
+    end
+
+    subgraph "TAB 1: MOVIMIENTO DE USUARIOS (DASHBOARD)"
+        DASH["<b>Dashboard Audit</b>"]
+        DASHF["Filtros:<br/>• Usuario (autocomplete)<br/>• Acciones (multi-select)<br/>• Rango fechas<br/>• Éxito/Error"]
+        DASHT["Tabla 50 logs/página:<br/>Timestamp, Usuario<br/>Rol, Acción<br/>Ruta, Archivo<br/>Tamaño, IP<br/>Navegador, Estado"]
+        DASHLOG["<b>AuditLog Model</b><br/>id, user, username<br/>action, target_path<br/>target_name, file_size<br/>details (JSON)<br/>ip_address, user_agent<br/>success, error_message<br/>timestamp"]
+    end
+
+    subgraph "TAB 2: AUDITORÍA POR DIRECTORIO"
+        DIRAUD["<b>Directory Audit</b>"]
+        DIRF["Buscar carpeta:<br/>/datos/proyecto/2025<br/>Filtrar: usuario, acción<br/>Rango de fechas"]
+        DIRRES["Resultados:<br/>Total cambios<br/>Usuarios involucrados<br/>Timeline de cambios<br/>Exportar CSV"]
+    end
+
+    subgraph "TAB 3: SEGUIMIENTO DE ARCHIVO"
+        FILEAUD["<b>File Audit</b>"]
+        FILEF["Buscar archivo:<br/>documento.pdf<br/>Filtrar: usuario, acción<br/>Rango de fechas"]
+        FILERES["Cronología completa:<br/>UPLOAD → DOWNLOAD<br/>RENAME → COPY<br/>DELETE → RESTORE<br/>Con detalles de cada cambio"]
+    end
+
+    subgraph "BACKEND - AUDIT APIS"
+        AUA1["GET /audit/logs<br/>?username=X&action=Y<br/>&date_from=Z&success=true<br/>Retorna 50 logs pagínados"]
+        AUA2["GET /audit/available-filters<br/>Usuarios y acciones disponibles"]
+        AUA3["POST /audit/export<br/>Descargar CSV con filtros"]
+        AUA4["GET /audit/directory/{path}<br/>GET /audit/file?name=X<br/>GET /audit/file/{id}<br/>Historial específico"]
+    end
+
+    subgraph "ACCIONES AUDITADAS"
+        ACT1["Archivos:<br/>UPLOAD, DOWNLOAD<br/>DELETE, RESTORE<br/>RENAME, MOVE<br/>COPY"]
+        ACT2["Carpetas:<br/>CREATE_FOLDER<br/>DELETE_FOLDER<br/>RENAME_FOLDER"]
+        ACT3["Permisos:<br/>CHANGE_PERMISSIONS<br/>SHARE_FILE<br/>REVOKE_ACCESS"]
+        ACT4["Sistema:<br/>LOGIN, LOGOUT<br/>CREATE_USER, DELETE_USER<br/>EDIT_USER"]
+    end
+
+    subgraph "BACKEND - MODELOS"
+        DBUSER["User Model<br/>id, username, email<br/>role (SUPERADMIN|EDITOR|VIEWER)<br/>is_active, created_at<br/>last_login, password"]
+        DBPERM["Permission Model<br/>Visto arriba"]
+        DBGROUP["Group Model<br/>id, name, description<br/>members (M2M User)<br/>created_at, created_by"]
+        DBLOG["AuditLog Model<br/>Visto arriba"]
+    end
+
+    subgraph "PERSISTENCIA"
+        DB["PostgreSQL<br/>Users, Permissions<br/>Groups, AuditLogs<br/>Índices en:<br/>user+timestamp<br/>action+timestamp"]
+        REDIS["Redis<br/>Caché usuarios (5m)<br/>Caché permisos (1m)<br/>Sesiones JWT"]
+    end
+
+    subgraph "SEGURIDAD"
+        SEC1["IsAdmin Permission:<br/>Solo SUPERADMIN"]
+        SEC2["JWT Validation<br/>en cada request"]
+        SEC3["Audit Middleware<br/>Registra cada cambio"]
+        SEC4["Role-based Access:<br/>SUPERADMIN > EDITOR > VIEWER"]
+    end
+
+    ADM --> TAB
+    TAB --> UM
+    TAB --> PM
+    UM --> UMC
+    PM --> PMC
+    
+    UMC --> UMS
+    UMC --> UMComp
+    UMC --> UMFlow
+    
+    PMC --> PMS
+    PMS --> PMTab1
+    PMS --> PMTab2
+    PMS --> PMTab3
+    
+    PMTab1 --> PERM
+    PERM --> PERM2
+    PERM --> PERM3
+    PERM --> PERM4
+    
+    UMFlow --> BA1
+    PMTab1 --> BA2
+    PMTab2 --> BA3
+    PMTab3 --> BA4
+    
+    BA1 --> DBUSER
+    BA2 --> DBPERM
+    BA4 --> DBGROUP
+    
+    AUD --> DASH
+    AUD --> DIRAUD
+    AUD --> FILEAUD
+    
+    DASH --> DASHF
+    DASH --> DASHT
+    DASHT --> DASHLOG
+    
+    DIRAUD --> DIRF
+    DIRAUD --> DIRRES
+    
+    FILEAUD --> FILEF
+    FILEAUD --> FILERES
+    
+    DASHLOG --> ACT1
+    DASHLOG --> ACT2
+    DASHLOG --> ACT3
+    DASHLOG --> ACT4
+    
+    DASH --> AUA1
+    DASH --> AUA2
+    DASH --> AUA3
+    DIRAUD --> AUA4
+    FILEAUD --> AUA4
+    
+    AUA1 --> DB
+    AUA4 --> DB
+    BA1 --> DB
+    BA2 --> DB
+    BA4 --> DB
+    
+    BA1 --> REDIS
+    BA2 --> REDIS
+    
+    SEC1 -.->|valida| BA1
+    SEC2 -.->|valida| AUA1
+    SEC3 -.->|registra| DBLOG
+    SEC4 -.->|controla| UMFlow
+
+    classDef admin fill:#3B82F6,stroke:#1E40AF,color:#fff
+    classDef users fill:#10B981,stroke:#047857,color:#fff
+    classDef perms fill:#F59E0B,stroke:#D97706,color:#fff
+    classDef audit fill:#EF4444,stroke:#DC2626,color:#fff
+    classDef backend fill:#8B5CF6,stroke:#6D28D9,color:#fff
+    classDef modelo fill:#EC4899,stroke:#BE185D,color:#fff
+    classDef bd fill:#6366F1,stroke:#4F46E5,color:#fff
+    classDef sec fill:#14B8A6,stroke:#0D9488,color:#fff
+
+    class ADM,TAB,UM,PM,UMC,PMC admin
+    class UMS,UMComp,UMFlow users
+    class PMS,PMTab1,PMTab2,PMTab3,PERM,PERM2,PERM3,PERM4 perms
+    class AUD,DASH,DIRAUD,FILEAUD,DASHF,DASHT,FILEF,FILERES audit
+    class BA1,BA2,BA3,BA4,AUA1,AUA2,AUA3,AUA4 backend
+    class DASHLOG,DBUSER,DBPERM,DBGROUP,DBLOG modelo
+    class DB,REDIS bd
+    class SEC1,SEC2,SEC3,SEC4 sec

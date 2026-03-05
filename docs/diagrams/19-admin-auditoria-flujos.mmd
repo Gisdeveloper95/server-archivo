@@ -1,0 +1,241 @@
+graph TD
+    subgraph "ADMINISTRACIÓN - FLUJOS"
+        A["FLUJO 1: GESTIÓN DE USUARIOS"]
+        A1["Admin entra a Administration.tsx"]
+        A2["setActiveTab = 'users'"]
+        A3["UserManagement monta"]
+        A4["loadUsers() → GET /api/admin/users"]
+        A5["Mostrar tabla con:<br/>Username, Email, Nombre<br/>Rol, Estado, Last login"]
+        A6{Admin elige}
+        A6A["Crear Usuario"]
+        A6A1["setIsCreateModalOpen = true"]
+        A6A2["CreateUserModal abre"]
+        A6A3["Input: email, nombre<br/>Dropdown: rol"]
+        A6A4["POST /api/admin/users"]
+        A6A5["Sistema genera contraseña"]
+        A6A6["Envía email con credenciales"]
+        A6A7["loadUsers()"]
+        A6A8["Toast: ✓ Usuario creado"]
+        A6B["Editar Usuario"]
+        A6B1["setSelectedUser = user"]
+        A6B1A["setIsEditModalOpen = true"]
+        A6B1B["EditUserModal abre"]
+        A6B1C["Editar: email, nombre, rol, estado"]
+        A6B1D["PATCH /api/admin/users/{id}"]
+        A6B1E["loadUsers()"]
+        A6B1F["Toast: ✓ Actualizado"]
+        A6C["Ver Auditoría"]
+        A6C1["setIsAuditModalOpen = true"]
+        A6C2["UserAuditModal abre"]
+        A6C3["GET /api/admin/users/{id}/audit"]
+        A6C4["Mostrar timeline:<br/>Qué hace este usuario<br/>Cuándo y dónde"]
+        A6D["Eliminar Usuario"]
+        A6D1["confirm('¿Eliminar?')"]
+        A6D2["DELETE /api/admin/users/{id}"]
+        A6D3["Soft delete:<br/>is_active = false"]
+        A6D4["Permisos heredan"]
+        A6D5["loadUsers()"]
+        A6D6["Toast: ✓ Eliminado"]
+    end
+
+    subgraph "PERMISOS - FLUJOS"
+        B["FLUJO 2: ASIGNAR PERMISOS (Individual)"]
+        B1["Admin entra a Tab Permisos"]
+        B2["setActiveTab = 'individual'"]
+        B3["PermissionManagement monta"]
+        B4["loadUsers() → GET /api/admin/users"]
+        B5["Admin selecciona usuario"]
+        B6["loadUserPermissions(userId)"]
+        B7["GET /api/admin/users/{userId}/permissions"]
+        B8["Mostrar tabla permisos:<br/>Ruta, R/W/D, Herencia<br/>Profundidad, Expira"]
+        B9{Admin elige}
+        B9A["Asignar Permiso"]
+        B9A1["setIsAssignModalOpen = true"]
+        B9A2["AssignPermissionModal abre"]
+        B9A3["Formulario:<br/>📁 Ruta: /datos/proyecto<br/>✓ Permisos: can_read, can_write, can_delete<br/>🔄 Herencia: total|blocked|limited_depth<br/>📏 Max depth: 3<br/>🚫 Rutas bloqueadas: /temp, /cache<br/>📅 Expira: (opcional)"]
+        B9A4["POST /api/admin/permissions"]
+        B9A5["Backend valida:<br/>• Usuario existe<br/>• Ruta es válida<br/>• Permisos lógicos"]
+        B9A6["AuditLog: CHANGE_PERMISSIONS"]
+        B9A7["loadUserPermissions(userId)"]
+        B9A8["Toast: ✓ Permiso asignado"]
+        B9B["Editar Permiso"]
+        B9B1["setPermissionToEdit = perm"]
+        B9B2["setIsEditModalOpen = true"]
+        B9B3["EditPermissionModal abre<br/>Pre-cargado con valores"]
+        B9B4["Usuario edita cualquier campo"]
+        B9B5["PATCH /api/admin/permissions/{id}"]
+        B9B6["AuditLog: CHANGE_PERMISSIONS"]
+        B9B7["loadUserPermissions(userId)"]
+        B9C["Ver Detalles"]
+        B9C1["setIsViewModalOpen = true"]
+        B9C2["ViewPermissionModal abre (read-only)"]
+        B9C3["Mostrar toda la config:<br/>Rutas bloqueadas<br/>Subdirs read-only<br/>Historial de cambios"]
+        B9D["Revocar Permiso"]
+        B9D1["confirm('¿Revocar?')"]
+        B9D2["DELETE /api/admin/permissions/{id}"]
+        B9D3["Usuario pierde acceso a ruta"]
+        B9D4["AuditLog: REVOKE_ACCESS"]
+        B9D5["loadUserPermissions(userId)"]
+    end
+
+    subgraph "PERMISOS - ASIGNACIÓN MASIVA"
+        C["FLUJO 3: ASIGNAR MÚLTIPLES (Bulk)"]
+        C1["Admin entra a Tab 'Asignación Masiva'"]
+        C2["setActiveTab = 'bulk'"]
+        C3["BulkPermissionAssignment monta"]
+        C4["UserAutocompleteSelector:<br/>Escribir: 'John'<br/>Autocomplete: john, john.doe, johndoe"]
+        C5["Admin selecciona: [john, user1, user2]"]
+        C6["RouteMultiInput:<br/>Agregar rutas:<br/>/datos/proyecto/2025<br/>/datos/backup<br/>/datos/archive"]
+        C7["Seleccionar permisos:<br/>☑ Leer<br/>☑ Escribir<br/>☐ Eliminar<br/>☐ Crear carpetas"]
+        C8["Click: 'Asignar a todos'"]
+        C9["POST /api/admin/permissions/bulk<br/>{<br/>users: [1,2,3]<br/>paths: ['/p1','/p2','/p3']<br/>permissions: {read:true, write:true}<br/>}"]
+        C10["Backend calcula:<br/>3 usuarios × 3 rutas = 9 permisos"]
+        C11["Crear todos los Permission records"]
+        C12["AuditLog: 9 registros CHANGE_PERMISSIONS"]
+        C13["Mostrar resumen:<br/>✓ 9 permisos creados<br/>3 usuarios × 3 rutas<br/>Usuarios: john, user1, user2"]
+    end
+
+    subgraph "GRUPOS - FLUJOS"
+        D["FLUJO 4: GESTIÓN DE GRUPOS"]
+        D1["Admin entra a Tab 'Grupos'"]
+        D2["GroupManagement monta"]
+        D3["GET /api/admin/groups"]
+        D4["Mostrar grupos:<br/>Nombre, Miembros, Permisos"]
+        D5{Admin elige}
+        D5A["Crear Grupo"]
+        D5A1["Formulario:<br/>Nombre: 'Proyecto 2025'<br/>Descripción"]
+        D5A2["POST /api/admin/groups"]
+        D5A3["Grupo creado"]
+        D5B["Agregar Miembros"]
+        D5B1["Modal: Seleccionar usuarios"]
+        D5B2["Autocomplete para buscar"]
+        D5B3["POST /api/admin/groups/{id}/add-member<br/>Agregar user_id"]
+        D5C["Asignar Permisos al Grupo"]
+        D5C1["Todos los miembros heredan"]
+        D5C2["POST /api/admin/groups/{id}/permissions"]
+        D5C3["Crea Permission para cada miembro"]
+        D5D["Eliminar Grupo"]
+        D5D1["DELETE /api/admin/groups/{id}"]
+        D5D2["Permisos del grupo persisten"]
+        D5D3["(Los usuarios no pierden acceso)"]
+    end
+
+    subgraph "AUDITORÍA - FLUJOS"
+        E["FLUJO 5: AUDITORÍA - DASHBOARD"]
+        E1["Usuario entra a Audit.tsx"]
+        E2["setActiveTab = 'dashboard'"]
+        E3["GET /api/audit/available-filters"]
+        E4["availableUsernames: [admin, user1, user2]<br/>availableActions: [UPLOAD, DOWNLOAD, DELETE, ...]"]
+        E5["GET /api/audit/logs?page=1&limit=50"]
+        E6["Mostrar tabla 50 logs:<br/>Timestamp, Usuario, Acción<br/>Ruta, Archivo, Tamaño<br/>IP, Navegador, Estado"]
+        E7{Usuario filtra}
+        E7A["Escribe usuario 'john'<br/>Autocomplete sugiere"]
+        E7A1["Selecciona 'john'"]
+        E7B["Multi-select acciones:<br/>Shift+Click en UPLOAD<br/>Shift+Click en DELETE<br/>Shift+Click en RENAME"]
+        E7B1["Elige rango fechas:<br/>De: 2026-01-01<br/>A: 2026-01-16"]
+        E7B2["Dropdown: 'Todos' o 'Exitosos' o 'Errores'"]
+        E8["Click 'Aplicar Filtros'"]
+        E9["GET /api/audit/logs<br/>?username=john<br/>&action=UPLOAD,DELETE,RENAME<br/>&date_from=2026-01-01<br/>&date_to=2026-01-16"]
+        E10["Tabla se actualiza:<br/>Filtrando resultados<br/>Paginación reseteada a 1"]
+        E11{Exportar?}
+        E11A["Click 'Descargar CSV'"]
+        E11B["POST /api/audit/export<br/>con filtros aplicados"]
+        E11C["Sistema genera CSV"]
+        E11D["Usuario descarga archivo<br/>archivo_auditoria_2026-01-16.csv"]
+        E11E["Abre en Excel/Google Sheets"]
+    end
+
+    subgraph "AUDITORÍA - DIRECTORIO"
+        F["FLUJO 6: AUDITORÍA - POR DIRECTORIO"]
+        F1["Usuario entra a Tab 'Por Directorio'"]
+        F2["Input: Ruta '/datos/proyecto'"]
+        F3["Filtros opcionales:<br/>Usuario, Acción<br/>Rango fechas"]
+        F4["Click 'Buscar'"]
+        F5["GET /api/audit/directory//datos/proyecto<br/>?date_from=&date_to=<br/>&username=&action="]
+        F6["Backend busca cambios en:<br/>• /datos/proyecto (y contenido)<br/>• Archivos subidos/descargados<br/>• Permisos cambiados<br/>Retorna histórico completo"]
+        F7["Mostrar resumen:<br/>Total cambios: 342<br/>Período: 01/01-01/16<br/>Usuarios: 5<br/>Últimas acciones: [lista]"]
+        F8["Tabla con logs de esa carpeta"]
+        F9["Botón 'Exportar CSV'<br/>Solo de esta carpeta"]
+    end
+
+    subgraph "AUDITORÍA - ARCHIVO"
+        G["FLUJO 7: AUDITORÍA - SEGUIMIENTO ARCHIVO"]
+        G1["Usuario entra a Tab 'Seguimiento'"]
+        G2["Input: 'documento.pdf'"]
+        G3["Filtros opcionales"]
+        G4["Click 'Buscar'"]
+        G5["GET /api/audit/file?name=documento.pdf"]
+        G6["Backend busca en toda la estructura<br/>Retorna TODOS los eventos del archivo"]
+        G7["Cronología completa:<br/>📅 01/16 14:30 - admin - UPLOAD<br/>   /datos/proyecto<br/>   Archivo subido (2.5 MB)"]
+        G8["📅 01/16 14:35 - user1 - DOWNLOAD<br/>   /datos/proyecto<br/>   Descargado"]
+        G9["📅 01/16 15:00 - admin - RENAME<br/>   documento_v2.pdf"]
+        G10["📅 01/16 15:15 - user2 - COPY<br/>   Copiado a /datos/backup"]
+        G11["📅 01/17 09:00 - admin - DELETE<br/>   Movido a papelera"]
+        G12["📅 01/17 09:05 - admin - RESTORE<br/>   Restaurado de papelera"]
+        G13["Click 'Ver Detalles'"]
+        G14["Modal con info completa:<br/>Ruta actual<br/>Tamaño<br/>Propietario<br/>Hash/Checksum<br/>Historial JSON raw"]
+    end
+
+    subgraph "BACKEND - VALIDACIONES"
+        H["VALIDACIONES BACKEND"]
+        H1["JWT Token válido"]
+        H2["Usuario autenticado"]
+        H3["Para Admin: ¿Es SUPERADMIN?"]
+        H4["Para Audit: Al menos VIEWER"]
+        H5["Registrar en AuditLog:<br/>Quién, Qué, Cuándo<br/>Resultado (éxito/error)"]
+    end
+
+    A --> A1 --> A2 --> A3 --> A4 --> A5 --> A6
+    A6 --> A6A --> A6A1 --> A6A2 --> A6A3 --> A6A4 --> A6A5 --> A6A6 --> A6A7 --> A6A8
+    A6 --> A6B --> A6B1 --> A6B1A --> A6B1B --> A6B1C --> A6B1D --> A6B1E --> A6B1F
+    A6 --> A6C --> A6C1 --> A6C2 --> A6C3 --> A6C4
+    A6 --> A6D --> A6D1 --> A6D2 --> A6D3 --> A6D4 --> A6D5 --> A6D6
+
+    B --> B1 --> B2 --> B3 --> B4 --> B5 --> B6 --> B7 --> B8 --> B9
+    B9 --> B9A --> B9A1 --> B9A2 --> B9A3 --> B9A4 --> B9A5 --> B9A6 --> B9A7 --> B9A8
+    B9 --> B9B --> B9B1 --> B9B2 --> B9B3 --> B9B4 --> B9B5 --> B9B6 --> B9B7
+    B9 --> B9C --> B9C1 --> B9C2 --> B9C3
+    B9 --> B9D --> B9D1 --> B9D2 --> B9D3 --> B9D4 --> B9D5
+
+    C --> C1 --> C2 --> C3 --> C4 --> C5 --> C6 --> C7 --> C8 --> C9 --> C10 --> C11 --> C12 --> C13
+
+    D --> D1 --> D2 --> D3 --> D4 --> D5
+    D5 --> D5A --> D5A1 --> D5A2 --> D5A3
+    D5 --> D5B --> D5B1 --> D5B2 --> D5B3
+    D5 --> D5C --> D5C1 --> D5C2 --> D5C3
+    D5 --> D5D --> D5D1 --> D5D2 --> D5D3
+
+    E --> E1 --> E2 --> E3 --> E4 --> E5 --> E6 --> E7
+    E7 --> E7A --> E7A1
+    E7 --> E7B --> E7B1 --> E7B2
+    E8 --> E9 --> E10 --> E11
+    E11 --> E11A --> E11B --> E11C --> E11D --> E11E
+
+    F --> F1 --> F2 --> F3 --> F4 --> F5 --> F6 --> F7 --> F8 --> F9
+
+    G --> G1 --> G2 --> G3 --> G4 --> G5 --> G6 --> G7 --> G8 --> G9 --> G10 --> G11 --> G12 --> G13 --> G14
+
+    A6A4 --> H1
+    B9A4 --> H3
+    B9B5 --> H3
+    E9 --> H4
+    F5 --> H4
+    A6A4 --> H5
+
+    classDef flujo1 fill:#10B981,stroke:#047857,color:#fff
+    classDef flujo2 fill:#F59E0B,stroke:#D97706,color:#fff
+    classDef flujo3 fill:#8B5CF6,stroke:#6D28D9,color:#fff
+    classDef flujo4 fill:#EC4899,stroke:#BE185D,color:#fff
+    classDef flujo5 fill:#EF4444,stroke:#DC2626,color:#fff
+    classDef flujo6 fill:#06B6D4,stroke:#0891B2,color:#fff
+    classDef flujo7 fill:#14B8A6,stroke:#0D9488,color:#fff
+    classDef validacion fill:#6366F1,stroke:#4F46E5,color:#fff
+
+    class A,A1,A2,A3,A4,A5,A6,A6A,A6A1,A6A2,A6A3,A6A4,A6A5,A6A6,A6A7,A6A8,A6B,A6B1,A6B1A,A6B1B,A6B1C,A6B1D,A6B1E,A6B1F,A6C,A6C1,A6C2,A6C3,A6C4,A6D,A6D1,A6D2,A6D3,A6D4,A6D5,A6D6 flujo1
+    class B,B1,B2,B3,B4,B5,B6,B7,B8,B9,B9A,B9A1,B9A2,B9A3,B9A4,B9A5,B9A6,B9A7,B9A8,B9B,B9B1,B9B2,B9B3,B9B4,B9B5,B9B6,B9B7,B9C,B9C1,B9C2,B9C3,B9D,B9D1,B9D2,B9D3,B9D4,B9D5 flujo2
+    class C,C1,C2,C3,C4,C5,C6,C7,C8,C9,C10,C11,C12,C13 flujo3
+    class D,D1,D2,D3,D4,D5,D5A,D5A1,D5A2,D5A3,D5B,D5B1,D5B2,D5B3,D5C,D5C1,D5C2,D5C3,D5D,D5D1,D5D2,D5D3 flujo4
+    class E,E1,E2,E3,E4,E5,E6,E7,E7A,E7A1,E7B,E7B1,E7B2,E8,E9,E10,E11,E11A,E11B,E11C,E11D,E11E flujo5
+    class F,F1,F2,F3,F4,F5,F6,F7,F8,F9 flujo6
+    class G,G1,G2,G3,G4,G5,G6,G7,G8,G9,G10,G11,G12,G13,G14 flujo7
+    class H,H1,H2,H3,H4,H5 validacion

@@ -1,0 +1,191 @@
+graph TB
+    subgraph CLIENT["🌐 CLIENTE - FRONTEND REACT"]
+        AXIOS["Cliente Axios<br/>Peticiones HTTP<br/>Token JWT"]
+    end
+    
+    subgraph NGINX["🔄 NGINX REVERSE PROXY"]
+        PROXY["Nginx<br/>Puerto 80/443<br/>SSL TLS"]
+    end
+    
+    subgraph DJANGO["🔧 DJANGO REST API"]
+        subgraph MIDDLEWARE["🛡️ MIDDLEWARE"]
+            AUTH_MW["Autenticación<br/>Validación Token JWT"]
+            CORS_MW["CORS<br/>Origen Cruzado"]
+            LOGGING_MW["Registro<br/>Petición/Respuesta"]
+        end
+        
+        subgraph URLS["🔗 ENRUTAMIENTO URL"]
+            AUTH_URL["autenticación/<br/>iniciar, cerrar sesión<br/>registrar, actualizar"]
+            
+            FILES_URL["archivos/<br/>listar, detalle<br/>subir, descargar"]
+            
+            FILEOPS_URL["operaciones-archivos/<br/>copiar, mover<br/>eliminar, renombrar"]
+            
+            SHARING_URL["compartición/<br/>crear-enlace<br/>gestionar-acceso"]
+            
+            USERS_URL["usuarios/<br/>listar, detalle<br/>crear, editar"]
+            
+            ADMIN_URL["administración/<br/>usuarios, grupos<br/>permisos"]
+            
+            AUDIT_URL["auditoría/<br/>registros, historial"]
+            
+            NOTIF_URL["notificaciones/<br/>listar, marcar-leído"]
+            
+            STATS_URL["estadísticas/<br/>uso, almacenamiento"]
+            
+            GROQ_URL["groq/<br/>sugerencias<br/>análisis"]
+        end
+        
+        subgraph VIEWS["👁️ VISTAS/VIEWSETS - 8 APLICACIONES"]
+            subgraph AUTH_APP["🔐 APP AUTENTICACIÓN"]
+                AUTH_VIEW["VistaInicio<br/>VistaCierre<br/>VistaRegistro<br/>VistaActualizarToken"]
+            end
+            
+            subgraph FILES_APP["📁 APP ARCHIVOS"]
+                FILES_VIEW["ConjuntoVistas Archivo<br/>- listar()<br/>- obtener()<br/>- crear()"]
+                FILEOPS_VIEW["ConjuntoVistas OpsArchivos<br/>- copiar()<br/>- mover()<br/>- eliminar()<br/>- renombrar()"]
+            end
+            
+            subgraph SHARING_APP["🔗 APP COMPARTICIÓN"]
+                SHARING_VIEW["ConjuntoVistas EnlaceCompartido<br/>- crear()<br/>- listar()<br/>- destruir()"]
+                ACCESS_VIEW["ConjuntoVistas Acceso<br/>- asignar()<br/>- revocar()"]
+            end
+            
+            subgraph USERS_APP["👤 APP USUARIOS"]
+                USERS_VIEW["ConjuntoVistas Usuario<br/>- listar()<br/>- crear()<br/>- actualizar()"]
+                GROUPS_VIEW["ConjuntoVistas Grupo<br/>- listar()<br/>- crear()"]
+                ADMIN_VIEWS["VistasAdmin<br/>- asignar masivo<br/>- gestionar permisos"]
+            end
+            
+            subgraph OTHER_APPS["📊 OTRAS APPS"]
+                AUDIT_VIEW["ConjuntoVistas Auditoría<br/>- registros auditoría"]
+                NOTIF_VIEW["ConjuntoVistas Notificaciones<br/>- notificaciones"]
+                TRASH_VIEW["ConjuntoVistas Papelera<br/>- elementos papelera"]
+                GROQ_VIEW["ConjuntoVistas Groq<br/>- sugerencias"]
+                STATS_VIEW["ConjuntoVistas Estadísticas<br/>- estadísticas"]
+                DICT_VIEW["ConjuntoVistas Diccionario<br/>- abreviaturas"]
+            end
+        end
+        
+        subgraph SERIALIZERS["📦 SERIALIZADORES"]
+            AUTH_SER["SerializadorAutenticación"]
+            FILE_SER["SerializadorArchivo<br/>SerializadorCarpeta"]
+            SHARING_SER["SerializadorEnlaceCompartido<br/>SerializadorAcceso"]
+            USER_SER["SerializadorUsuario<br/>SerializadorGrupo"]
+            AUDIT_SER["SerializadorRegistroAuditoría"]
+            OTHER_SER["SerializadorNotificación<br/>SerializadorPapelera<br/>etc"]
+        end
+        
+        subgraph PERMISSIONS["🔒 PERMISOS Y AUTENTICACIÓN"]
+            JWT_AUTH["Autenticación JWT<br/>Validación Token"]
+            RBAC["RBAC - Role Based<br/>Access Control<br/>Permissions"]
+            PERMS_CHECK["Permission Checks<br/>IsOwner<br/>CanEdit<br/>CanDelete"]
+        end
+        
+        subgraph MODELS["🗄️ MODELS - ORM"]
+            subgraph USER_MODELS["👤 User Models"]
+                USER_MODEL["User<br/>id, email, password<br/>permissions, groups"]
+                GROUP_MODEL["Group<br/>id, name"]
+                PERM_MODEL["Permission<br/>id, name, codename"]
+            end
+            
+            subgraph FILE_MODELS["📁 File Models"]
+                FILE_MODEL["File<br/>id, name, path<br/>owner, created_at<br/>permissions"]
+                FOLDER_MODEL["Folder<br/>id, name, path<br/>parent, owner"]
+                PERM_FILE_MODEL["FilePermission<br/>file, user, perm"]
+            end
+            
+            subgraph SHARE_MODELS["🔗 Share Models"]
+                SHARE_LINK["ShareLink<br/>token, path<br/>expires_at, created_by"]
+                ACCESS_PERM["AccessPermission<br/>path, user<br/>permission"]
+            end
+            
+            subgraph OTHER_MODELS["📊 Other Models"]
+                AUDIT_MODEL["AuditLog<br/>user, action<br/>path, timestamp"]
+                NOTIF_MODEL["Notification<br/>user, message<br/>read, created_at"]
+                TRASH_MODEL["Trash<br/>original_path<br/>deleted_at"]
+                GROQ_MODEL["GroqStat<br/>query, response<br/>timestamp"]
+                DICT_MODEL["DictionaryEntry<br/>abbreviation<br/>full_form"]
+            end
+        end
+    end
+    
+    subgraph SERVICES["⚙️ BUSINESS LOGIC SERVICES"]
+        FILE_SERVICE["FileService<br/>- copy()<br/>- move()<br/>- delete()"]
+        PERM_SERVICE["PermissionService<br/>- check_access()<br/>- assign_perm()"]
+        SHARE_SERVICE["ShareService<br/>- create_link()<br/>- manage_access()"]
+        AUDIT_SERVICE["AuditService<br/>- log_action()<br/>- get_history()"]
+        TRASH_SERVICE["TrashService<br/>- move_to_trash()<br/>- restore()"]
+    end
+    
+    subgraph CACHE["⚡ CACHE & QUEUE"]
+        REDIS["Redis<br/>- Cache layer<br/>- Session store<br/>- Celery broker"]
+        CELERY["Celery<br/>- Async tasks<br/>- Scheduled jobs<br/>- Background processing"]
+    end
+    
+    subgraph DB["💾 DATABASE - POSTGRESQL"]
+        SCHEMA["PostgreSQL<br/>8 Apps with Tables<br/>Users, Files, Sharing<br/>Permissions, Audit<br/>Notifications, Trash<br/>Stats, Dictionary"]
+    end
+    
+    subgraph EXTERNAL["🌐 EXTERNAL SERVICES"]
+        GROQ["GROQ API<br/>- Suggestions<br/>- Analysis<br/>- Recommendations"]
+    end
+    
+    CLIENT -->|"HTTP + JWT"| NGINX
+    NGINX -->|"Forward"| DJANGO
+    
+    DJANGO -->|"HTTP Request"| MIDDLEWARE
+    MIDDLEWARE -->|"Validated"| URLS
+    URLS -->|"Route"| VIEWS
+    
+    VIEWS -->|"Serialize"| SERIALIZERS
+    SERIALIZERS -->|"Validate Data"| VIEWS
+    
+    VIEWS -->|"Check Perms"| PERMISSIONS
+    PERMISSIONS -->|"OK/Deny"| VIEWS
+    
+    VIEWS -->|"Query/Create"| MODELS
+    MODELS -->|"ORM"| DB
+    DB -->|"Data"| MODELS
+    MODELS -->|"Data"| VIEWS
+    
+    VIEWS -->|"Complex Logic"| SERVICES
+    SERVICES -->|"Query"| MODELS
+    
+    SERVICES -->|"Async Tasks"| CELERY
+    CELERY -->|"Config"| REDIS
+    REDIS -->|"Cache"| VIEWS
+    
+    VIEWS -->|"Cache Get/Set"| REDIS
+    
+    GROQ_VIEW -->|"API Call"| EXTERNAL
+    EXTERNAL -->|"Response"| GROQ_VIEW
+    
+    VIEWS -->|"JSON Response"| CLIENT
+    
+    style CLIENT fill:#99ccff
+    style NGINX fill:#ffcccc
+    style DJANGO fill:#ccffcc
+    style MIDDLEWARE fill:#ffffcc
+    style URLS fill:#ffccff
+    style VIEWS fill:#ffccff
+    style AUTH_APP fill:#ffe6cc
+    style FILES_APP fill:#ffe6cc
+    style SHARING_APP fill:#ffe6cc
+    style USERS_APP fill:#ffe6cc
+    style OTHER_APPS fill:#ffe6cc
+    style SERIALIZERS fill:#ffccff
+    style PERMISSIONS fill:#ff9999
+    style JWT_AUTH fill:#ff6666
+    style RBAC fill:#ff6666
+    style MODELS fill:#ffffcc
+    style USER_MODELS fill:#ffff99
+    style FILE_MODELS fill:#ffff99
+    style SHARE_MODELS fill:#ffff99
+    style OTHER_MODELS fill:#ffff99
+    style SERVICES fill:#99ff99
+    style REDIS fill:#ff99cc
+    style CELERY fill:#cc99ff
+    style DB fill:#ffff99
+    style GROQ fill:#99ccff
+    style EXTERNAL fill:#99ccff

@@ -1,0 +1,17 @@
+sequenceDiagram
+    participant U as Usuario
+    participant M as CreateFolderModal
+    participant H as useTreeData
+    participant A as API
+    participant B as Backend
+    
+    U->>M: Click New Folder
+    U->>M: Ingresa nombre
+    U->>M: Click Create
+    M->>H: createFolder(name)
+    H->>A: POST /api/files/create
+    A->>B: HTTP POST
+    B->>B: Crear carpeta
+    B-->>A: Response
+    A-->>H: Data
+    H-->>U: Actualizar árbol

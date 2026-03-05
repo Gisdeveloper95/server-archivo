@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagrama Entidad-Relación (ERD) - Sistema de Gestión de Archivos IGAC</title>
+    
+<style>
+    * {
+        box-sizing: border-box;
+    }
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 40px;
+        background: #f5f5f5;
+        color: #333;
+        line-height: 1.6;
+    }
+    .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+        color: #2c3e50;
+        border-bottom: 3px solid #3498db;
+        padding-bottom: 15px;
+        margin-top: 0;
+    }
+    h2 {
+        color: #34495e;
+        border-bottom: 2px solid #ecf0f1;
+        padding-bottom: 10px;
+        margin-top: 40px;
+    }
+    h3 {
+        color: #7f8c8d;
+        margin-top: 30px;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        font-size: 14px;
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 12px;
+        text-align: left;
+    }
+    th {
+        background: #3498db;
+        color: white;
+        font-weight: 600;
+    }
+    tr:nth-child(even) {
+        background: #f9f9f9;
+    }
+    tr:hover {
+        background: #f1f1f1;
+    }
+    code {
+        background: #f4f4f4;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: 'Consolas', 'Monaco', monospace;
+        font-size: 13px;
+    }
+    pre {
+        background: #2c3e50;
+        color: #ecf0f1;
+        padding: 20px;
+        border-radius: 5px;
+        overflow-x: auto;
+        font-size: 13px;
+    }
+    pre code {
+        background: transparent;
+        color: inherit;
+        padding: 0;
+    }
+    .diagram-container {
+        text-align: center;
+        margin: 30px 0;
+        padding: 20px;
+        background: #fafafa;
+        border-radius: 8px;
+        border: 1px solid #eee;
+    }
+    .diagram-container img {
+        max-width: 100%;
+        height: auto;
+    }
+    .diagram-title {
+        font-weight: bold;
+        color: #666;
+        margin-bottom: 15px;
+        font-size: 14px;
+    }
+    .mermaid-code {
+        display: none;
+    }
+    .note {
+        background: #fff3cd;
+        border-left: 4px solid #ffc107;
+        padding: 15px;
+        margin: 20px 0;
+        border-radius: 0 5px 5px 0;
+    }
+    .info {
+        background: #d1ecf1;
+        border-left: 4px solid #17a2b8;
+        padding: 15px;
+        margin: 20px 0;
+        border-radius: 0 5px 5px 0;
+    }
+    ul, ol {
+        margin: 15px 0;
+        padding-left: 30px;
+    }
+    li {
+        margin: 8px 0;
+    }
+    hr {
+        border: none;
+        border-top: 2px solid #ecf0f1;
+        margin: 40px 0;
+    }
+    .header-info {
+        background: #3498db;
+        color: white;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+    }
+    .header-info h1 {
+        color: white;
+        border-bottom-color: rgba(255,255,255,0.3);
+        margin: 0;
+    }
+    .toc {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        margin: 20px 0;
+    }
+    .toc h3 {
+        margin-top: 0;
+    }
+    .toc ul {
+        list-style-type: none;
+        padding-left: 0;
+    }
+    .toc li {
+        margin: 10px 0;
+    }
+    .toc a {
+        color: #3498db;
+        text-decoration: none;
+    }
+    .toc a:hover {
+        text-decoration: underline;
+    }
+    @media print {
+        body {
+            background: white;
+            padding: 0;
+        }
+        .container {
+            box-shadow: none;
+            padding: 20px;
+        }
+        .diagram-container {
+            page-break-inside: avoid;
+        }
+    }
+</style>
+
+</head>
+<body>
+    <div class="container">
+        <h1>Diagrama Entidad-Relación (ERD) - Sistema de Gestión de Archivos IGAC</h1>
+<h2>Resumen del Modelo de Datos</h2>
+<ul>
+<li><strong>Total de Modelos:</strong> 19</li>
+<li><strong>Total de Relaciones FK:</strong> 37</li>
+<li><strong>Modelo Central:</strong> User (conecta con todos los demás)</li>
+<li><strong>Base de Datos:</strong> PostgreSQL 15</li></p>
+<p></ol>
+<hr>
+<h2>Diagrama ERD Completo (Mermaid)</h2>
+<div class="diagram-container">
+    <div class="diagram-title">Diagrama 1</div>
+    <img src="imagenes/01_ERD_modelo_datos_diagrama_01.png" alt="Diagrama 1">
+</div>
+<hr>
+<h2>Tabla de Relaciones Detallada</h2>
+<table>
+<thead>
+<tr>
+<th>Modelo Origen</th>
+<th>Relación</th>
+<th>Modelo Destino</th>
+<th>Tipo FK</th>
+<th>On Delete</th>
+<th>Nullable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>User</td>
+<td>exemption_granted_by</td>
+<td>User</td>
+<td>Self</td>
+<td>SET_NULL</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td>User</td>
+<td>created_by</td>
+<td>User</td>
+<td>Self</td>
+<td>SET_NULL</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td>UserPermission</td>
+<td>user</td>
+<td>User</td>
+<td>FK</td>
+<td>CASCADE</td>
+<td>No</td>
+</tr>
+<tr>
+<td>UserPermission</td>
+<td>granted_by</td>
+<td>User</td>
+<td>FK</td>
+<td>SET_NULL</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td>UserFavorite</td>
+<td>user</td>
+<td>User</td>
+<td>FK</td>
+<td>CASCADE</td>
+<td>No</td>
+</tr>
+<tr>
+<td>PasswordResetToken</td>
+<td>user</td>
+<td>User</td>
+<td>FK</td>
+<td>CASCADE</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Directory</td>
+<td>parent</td>
+<td>Directory</td>
+<td>Self</td>
+<td>CASCADE</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td>Directory</td>
+<td>created_by</td>
+<td>User</td>
+<td>FK</td>
+<td>SET_NULL</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td>File</td>
+<td>directory</td>
+<td>Directory</td>
+<td>FK</td>
+<td>CASCADE</td>
+<td>No</td>
+</tr>
+<tr>
+<td>File</td>
+<td>uploaded_by</td>
+<td>User</td>
+<td>FK</td>
+<td>SET_NULL</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td>File</td>
+<td>modified_by</td>
+<td>User</td>
+<td>FK</td>
+<td>SET_NULL</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td>DirectoryColor</td>
+<td>user</td>
+<td>User</td>
+<td>FK</td>
+<td>CASCADE</td>
+<td>No</td>
+</tr>
+<tr>
+<td>AuditLog</td>
+<td>user</td>
+<td>User</td>
+<td>FK</td>
+<td>SET_NULL</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td>ZipAnalysis</td>
+<td>analyzed_by</td>
+<td>User</td>
+<td>FK</td>
+<td>SET_NULL</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td>PermissionAudit</td>
+<td>user</td>
+<td>User</td>
+<td>FK</td>
+<td>CASCADE</td>
+<td>No</td>
+</tr>
+<tr>
+<td>PermissionAudit</td>
+<td>changed_by</td>
+<td>User</td>
+<td>FK</td>
+<td>SET_NULL</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td>DictionaryEntry</td>
+<td>created_by</td>
+<td>User</td>
+<td>FK</td>
+<td>SET_NULL</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td>DictionaryEntry</td>
+<td>updated_by</td>
+<td>User</td>
+<td>FK</td>
+<td>SET_NULL</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td>AIGeneratedAbbreviation</td>
+<td>reviewed_by</td>
+<td>User</td>
+<td>FK</td>
+<td>SET_NULL</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td>ShareLink</td>
+<td>trash_item</td>
+<td>TrashItem</td>
+<td>FK</td>
+<td>CASCADE</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td>ShareLink</td>
+<td>created_by</td>
+<td>User</td>
+<td>FK</td>
+<td>CASCADE</td>
+<td>No</td>
+</tr>
+<tr>
+<td>ShareLink</td>
+<td>deactivated_by</td>
+<td>User</td>
+<td>FK</td>
+<td>SET_NULL</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td>ShareLinkAccess</td>
+<td>share_link</td>
+<td>ShareLink</td>
+<td>FK</td>
+<td>CASCADE</td>
+<td>No</td>
+</tr>
+<tr>
+<td>TrashItem</td>
+<td>deleted_by</td>
+<td>User</td>
+<td>FK</td>
+<td>SET_NULL</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td>TrashItem</td>
+<td>restored_by</td>
+<td>User</td>
+<td>FK</td>
+<td>SET_NULL</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td>TrashConfig</td>
+<td>updated_by</td>
+<td>User</td>
+<td>FK</td>
+<td>SET_NULL</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td>MessageThread</td>
+<td>participant_1</td>
+<td>User</td>
+<td>FK</td>
+<td>CASCADE</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td>MessageThread</td>
+<td>participant_2</td>
+<td>User</td>
+<td>FK</td>
+<td>CASCADE</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td>MessageThread</td>
+<td>assigned_to</td>
+<td>User</td>
+<td>FK</td>
+<td>SET_NULL</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td>MessageThread</td>
+<td>closed_by</td>
+<td>User</td>
+<td>FK</td>
+<td>SET_NULL</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td>Notification</td>
+<td>recipient</td>
+<td>User</td>
+<td>FK</td>
+<td>CASCADE</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Notification</td>
+<td>thread</td>
+<td>MessageThread</td>
+<td>FK</td>
+<td>CASCADE</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td>Notification</td>
+<td>sender</td>
+<td>User</td>
+<td>FK</td>
+<td>SET_NULL</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td>MessageAttachment</td>
+<td>notification</td>
+<td>Notification</td>
+<td>FK</td>
+<td>CASCADE</td>
+<td>No</td>
+</tr>
+<tr>
+<td>MessageAttachment</td>
+<td>uploaded_by</td>
+<td>User</td>
+<td>FK</td>
+<td>SET_NULL</td>
+<td>Sí</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2>Índices de Base de Datos</h2>
+<h3>Índices Críticos para Performance</h3>
+<table>
+<thead>
+<tr>
+<th>Modelo</th>
+<th>Índice</th>
+<th>Campos</th>
+<th>Propósito</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>User</td>
+<td>idx_user_email</td>
+<td>email</td>
+<td>Búsqueda por email (login)</td>
+</tr>
+<tr>
+<td>User</td>
+<td>idx_user_username</td>
+<td>username</td>
+<td>Búsqueda por username</td>
+</tr>
+<tr>
+<td>User</td>
+<td>idx_user_role</td>
+<td>role</td>
+<td>Filtrado por rol</td>
+</tr>
+<tr>
+<td>UserPermission</td>
+<td>idx_perm_user_active</td>
+<td>user_id, is_active</td>
+<td>Permisos activos del usuario</td>
+</tr>
+<tr>
+<td>UserPermission</td>
+<td>idx_perm_path</td>
+<td>base_path</td>
+<td>Búsqueda por ruta</td>
+</tr>
+<tr>
+<td>UserPermission</td>
+<td>idx_perm_expires</td>
+<td>expires_at, is_active</td>
+<td>Permisos por vencer</td>
+</tr>
+<tr>
+<td>Directory</td>
+<td>idx_dir_path</td>
+<td>path</td>
+<td>Búsqueda por ruta (único)</td>
+</tr>
+<tr>
+<td>Directory</td>
+<td>idx_dir_parent</td>
+<td>parent_id</td>
+<td>Navegación jerárquica</td>
+</tr>
+<tr>
+<td>Directory</td>
+<td>idx_dir_depth</td>
+<td>depth</td>
+<td>Filtrado por nivel</td>
+</tr>
+<tr>
+<td>File</td>
+<td>idx_file_path</td>
+<td>path</td>
+<td>Búsqueda por ruta (único)</td>
+</tr>
+<tr>
+<td>File</td>
+<td>idx_file_dir_name</td>
+<td>directory_id, name</td>
+<td>Listado de directorio</td>
+</tr>
+<tr>
+<td>File</td>
+<td>idx_file_ext</td>
+<td>extension</td>
+<td>Filtrado por tipo</td>
+</tr>
+<tr>
+<td>AuditLog</td>
+<td>idx_audit_user_time</td>
+<td>user_id, timestamp</td>
+<td>Auditoría por usuario</td>
+</tr>
+<tr>
+<td>AuditLog</td>
+<td>idx_audit_action_time</td>
+<td>action, timestamp</td>
+<td>Auditoría por acción</td>
+</tr>
+<tr>
+<td>Notification</td>
+<td>idx_notif_recipient_read</td>
+<td>recipient_id, is_read</td>
+<td>Notificaciones no leídas</td>
+</tr>
+<tr>
+<td>TrashItem</td>
+<td>idx_trash_expires</td>
+<td>expires_at</td>
+<td>Items por expirar</td>
+</tr>
+<tr>
+<td>TrashItem</td>
+<td>idx_trash_status</td>
+<td>status</td>
+<td>Filtrado por estado</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2>Constraints Únicos</h2>
+<table>
+<thead>
+<tr>
+<th>Modelo</th>
+<th>Constraint</th>
+<th>Campos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>User</td>
+<td>unique_email</td>
+<td>email</td>
+</tr>
+<tr>
+<td>User</td>
+<td>unique_username</td>
+<td>username</td>
+</tr>
+<tr>
+<td>UserPermission</td>
+<td>unique_user_path</td>
+<td>user_id, base_path</td>
+</tr>
+<tr>
+<td>UserFavorite</td>
+<td>unique_user_favorite</td>
+<td>user_id, path</td>
+</tr>
+<tr>
+<td>Directory</td>
+<td>unique_path</td>
+<td>path</td>
+</tr>
+<tr>
+<td>File</td>
+<td>unique_file_path</td>
+<td>path</td>
+</tr>
+<tr>
+<td>DirectoryColor</td>
+<td>unique_user_dir_color</td>
+<td>user_id, directory_path</td>
+</tr>
+<tr>
+<td>DictionaryEntry</td>
+<td>unique_key</td>
+<td>key</td>
+</tr>
+<tr>
+<td>AIGeneratedAbbreviation</td>
+<td>unique_word</td>
+<td>original_word</td>
+</tr>
+<tr>
+<td>ShareLink</td>
+<td>unique_token</td>
+<td>token</td>
+</tr>
+<tr>
+<td>PasswordResetToken</td>
+<td>unique_token</td>
+<td>token</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2>Notas de Diseño</h2>
+<h3>Modelo User (Central)</h3>
+<ul>
+<li>Extiende <code>AbstractUser</code> de Django</li>
+<li>Sistema de roles: <code>consultation</code>, <code>consultation_edit</code>, <code>admin</code>, <code>superadmin</code></li>
+<li>Auto-referencias para tracking de creación y exempciones</li>
+<li>Campos de exención para reglas de nomenclatura</li></p>
+<p></ol>
+<h3>Sistema de Permisos</h3>
+<ul>
+<li>Permisos granulares por ruta (<code>base_path</code>)</li>
+<li>Herencia configurable: total, bloqueada, limitada por profundidad</li>
+<li>Soporte para rutas bloqueadas y de solo lectura (JSON arrays)</li>
+<li>Sistema de grupos para asignación masiva</li>
+<li>Notificaciones de expiración (7 días, 3 días)</li></p>
+<p></ol>
+<h3>Sistema de Archivos</h3>
+<ul>
+<li>Jerarquía de directorios con auto-referencia (parent/children)</li>
+<li>Tracking de propietario en uploads y modificaciones</li>
+<li>Contadores de archivos y tamaño en directorios</li>
+<li>Colores personalizados por usuario</li></p>
+<p></ol>
+<h3>Auditoría</h3>
+<ul>
+<li>Log completo de todas las acciones</li>
+<li>Tracking de IP y User-Agent</li>
+<li>Historial de cambios de permisos</li></p>
+<p></ol>
+<h3>Papelera de Reciclaje</h3>
+<ul>
+<li>UUID como primary key para seguridad</li>
+<li>Retención configurable (días)</li>
+<li>Notificaciones de expiración</li>
+<li>Metadata JSON para información adicional</li></p>
+<p></ol>
+<h3>Sistema de Mensajería</h3>
+<ul>
+<li>Hilos de conversación bidireccionales</li>
+<li>Tipos: warning, info, support, direct</li>
+<li>Soporte para archivos adjuntos</li>
+<li>Contadores de mensajes no leídos</li></p>
+<p></ul>
+    </div>
+</body>
+</html>

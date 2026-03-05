@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if is_reset %}Credenciales Actualizadas{% else %}Bienvenido{% endif %} - NetApp Bridge IGAC</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f3f4f6;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+        }
+        .banner {
+            background-color: #1e3a8a;
+            padding: 50px 20px;
+            text-align: center;
+        }
+        .banner-icon {
+            width: 80px;
+            height: 80px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .banner-icon svg {
+            width: 48px;
+            height: 48px;
+            fill: #ffffff;
+        }
+        .banner h1 {
+            color: #ffffff !important;
+            margin: 0;
+            font-size: 32px;
+            font-weight: 800;
+        }
+        .banner p {
+            color: #ffffff !important;
+            margin: 12px 0 0 0;
+            font-size: 18px;
+            font-weight: 500;
+        }
+        .content {
+            padding: 40px 30px;
+            color: #374151;
+            line-height: 1.6;
+        }
+        .greeting {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        .credentials-box {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border-left: 4px solid #2563eb;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 8px;
+        }
+        .credentials-box h2 {
+            color: #1e40af;
+            margin: 0 0 15px 0;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .credential-item {
+            background-color: #ffffff;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 6px;
+            border: 1px solid #bfdbfe;
+        }
+        .credential-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+        .credential-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1e40af;
+            font-family: 'Courier New', monospace;
+            word-break: break-all;
+        }
+        .button {
+            display: inline-block;
+            background-color: #047857 !important;
+            color: #ffffff !important;
+            text-decoration: none !important;
+            padding: 18px 48px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 20px;
+            margin: 20px 0;
+            border: 3px solid #065f46;
+        }
+        .warning {
+            background-color: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 6px;
+            color: #92400e;
+        }
+        .warning strong {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .footer {
+            background-color: #f9fafb;
+            padding: 30px;
+            text-align: center;
+            color: #6b7280;
+            font-size: 14px;
+            border-top: 1px solid #e5e7eb;
+        }
+        .footer-logo {
+            max-width: 200px;
+            margin-bottom: 15px;
+        }
+        .divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, #d1d5db, transparent);
+            margin: 25px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Banner -->
+        <div class="banner">
+            <div class="banner-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                </svg>
+            </div>
+            <h1 style="color: #ffffff !important; margin: 0; font-size: 32px; font-weight: 800;">
+                {% if is_reset %}Credenciales Actualizadas{% else %}¡Bienvenido a NetApp Bridge!{% endif %}
+            </h1>
+            <p style="color: #ffffff !important; margin: 12px 0 0 0; font-size: 18px; font-weight: 500;">
+                Sistema de Gestión de Archivos - IGAC
+            </p>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <div class="greeting">
+                Hola <strong>{{ user.first_name }} {{ user.last_name }}</strong>,
+            </div>
+
+            {% if is_reset %}
+            <p>
+                Tus credenciales de acceso han sido actualizadas. A continuación encontrarás tu nueva información de inicio de sesión para el sistema NetApp Bridge del IGAC.
+            </p>
+            {% else %}
+            <p>
+                Te damos la bienvenida al sistema NetApp Bridge del Instituto Geográfico Agustín Codazzi (IGAC).
+                Tu cuenta ha sido creada exitosamente y ya puedes acceder al sistema de gestión de archivos.
+            </p>
+            {% endif %}
+
+            <!-- Credentials Box -->
+            <div class="credentials-box">
+                <h2>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
+                    </svg>
+                    Tus Credenciales de Acceso
+                </h2>
+
+                <div class="credential-item">
+                    <div class="credential-label">Usuario</div>
+                    <div class="credential-value">{{ user.username }}</div>
+                </div>
+
+                <div class="credential-item">
+                    <div class="credential-label">Contraseña Temporal</div>
+                    <div class="credential-value">{{ password }}</div>
+                </div>
+            </div>
+
+            <!-- Warning -->
+            <div class="warning">
+                <strong>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                    </svg>
+                    Importante - Seguridad
+                </strong>
+                <ul style="margin: 5px 0; padding-left: 20px;">
+                    <li>Esta contraseña es temporal y altamente segura</li>
+                    <li>Guarda esta información en un lugar seguro</li>
+                    <li>No compartas tus credenciales con nadie</li>
+                    <li>Si olv idas tu contraseña, contacta al administrador del sistema</li>
+                </ul>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Login Button -->
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="{{ login_url }}" style="display: inline-block; background-color: #047857 !important; color: #ffffff !important; text-decoration: none !important; padding: 18px 48px; border-radius: 12px; font-weight: 700; font-size: 20px; border: 3px solid #065f46;">
+                    Iniciar Sesión Ahora
+                </a>
+            </div>
+
+            <div class="divider"></div>
+
+            <p style="color: #6b7280; font-size: 14px;">
+                <strong>Información de tu cuenta:</strong><br>
+                Email: {{ user.email }}<br>
+                Rol: {% if user.role == 'superadmin' %}Super Administrador{% elif user.role == 'admin' %}Administrador{% elif user.role == 'consultation_edit' %}Consulta y Edición{% else %}Solo Consulta{% endif %}
+            </p>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p style="margin: 0 0 10px 0; font-size: 16px; color: #374151; font-weight: 600;">
+                NetApp Bridge - IGAC
+            </p>
+            <p style="margin: 0 0 5px 0;">
+                Instituto Geográfico Agustín Codazzi
+            </p>
+            <p style="margin: 0; font-size: 12px;">
+                Este es un mensaje automático. Por favor no responder a este correo.
+            </p>
+            <p style="margin: 15px 0 0 0; font-size: 12px; color: #9ca3af;">
+                Si tienes alguna duda o problema, contacta al administrador del sistema.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

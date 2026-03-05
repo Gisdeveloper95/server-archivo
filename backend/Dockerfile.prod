@@ -1,0 +1,76 @@
+# ==========================================
+# BACKEND DOCKERFILE - PRODUCCIÓN
+# Django + Gunicorn + Multi-stage build
+# ==========================================
+
+# ============ STAGE 1: Builder ============
+FROM python:3.11-slim as builder
+
+WORKDIR /app
+
+# Instalar dependencias del sistema para compilar
+RUN apt-get update -qq && apt-get install -y --no-install-recommends \
+    build-essential \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copiar requirements e instalar dependencias en un directorio temporal
+COPY requirements.txt .
+RUN pip install --user --no-cache-dir -r requirements.txt
+
+# ============ STAGE 2: Runtime ============
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Instalar solo las dependencias runtime necesarias
+RUN apt-get update -qq && apt-get install -y --no-install-recommends \
+    libpq5 \
+    curl \
+    netcat-openbsd \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copiar dependencias Python instaladas desde builder
+COPY --from=builder /root/.local /root/.local
+
+# Asegurar que los binarios de Python estén en PATH
+ENV PATH=/root/.local/bin:$PATH
+
+# Copiar código de la aplicación
+COPY . /app
+
+# Variables de entorno para Python
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    DJANGO_SETTINGS_MODULE=config.settings
+
+# Crear directorios necesarios
+RUN mkdir -p /app/static /app/media /app/logs && \
+    chmod -R 755 /app/static /app/media /app/logs
+
+# Recolectar archivos estáticos (se ejecutará en el entrypoint también)
+# RUN python manage.py collectstatic --noinput || true
+
+# Exponer puerto
+EXPOSE 8000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+    CMD curl -f http://localhost:8000/api/auth/health/ || exit 1
+
+# Entrypoint script
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
+
+ENTRYPOINT ["/docker-entrypoint.sh"]
+
+# Comando por defecto: Gunicorn con 4 workers
+CMD ["gunicorn", \
+     "--bind", "0.0.0.0:8000", \
+     "--workers", "4", \
+     "--threads", "2", \
+     "--timeout", "120", \
+     "--access-logfile", "-", \
+     "--error-logfile", "-", \
+     "--log-level", "info", \
+     "config.wsgi:application"]

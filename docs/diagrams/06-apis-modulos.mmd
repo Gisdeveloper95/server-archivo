@@ -1,0 +1,19 @@
+graph TB
+    APICLIENT["API Client<br/>axios instance"]
+    
+    APICLIENT -->|Auth| AUTH["auth.ts"]
+    APICLIENT -->|Files| FILES["files.ts"]
+    APICLIENT -->|File Ops| FILEOPS["fileOps.ts"]
+    APICLIENT -->|Sharing| SHARING["sharing.ts"]
+    APICLIENT -->|Users| USERS["users.ts"]
+    APICLIENT -->|Admin| ADMIN["admin.ts"]
+    APICLIENT -->|Audit| AUDIT["audit.ts"]
+    APICLIENT -->|Stats| STATS["stats.ts"]
+    
+    style APICLIENT fill:#ffcccc
+    style AUTH fill:#ff9999
+    style FILES fill:#99ccff
+    style FILEOPS fill:#99ccff
+    style SHARING fill:#99ff99
+    style USERS fill:#ffcc99
+    style ADMIN fill:#ffcc99

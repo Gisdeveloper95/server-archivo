@@ -1,0 +1,72 @@
+# ---- Datos runtime (NO son codigo fuente) ----
+ollama_data/
+postgres_data/
+redis_data/
+docker_images_offline/
+
+# ---- Archivos con secretos ----
+.env
+backend/.env
+backend/.env.production
+backend/.env.*
+frontend/.env
+frontend/.env.local
+frontend/.env.production
+
+# ---- Certificados SSL ----
+ssl/
+nginx/ssl/*.key
+nginx/ssl/*.crt
+nginx/ssl/*.pem
+nginx/ssl/**/*.key
+nginx/ssl/**/*.crt
+nginx/ssl/**/*.pem
+*.key
+*.crt
+*.pem
+
+# ---- Bases de datos locales ----
+*.db
+*.sqlite3
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+*.egg
+
+# ---- Node / Frontend ----
+node_modules/
+frontend/dist/
+frontend/dist-ssr/
+*.local
+
+# ---- Logs ----
+*.log
+backend/logs/
+logs/
+
+# ---- IDE / Editor ----
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ---- Media y static generados ----
+backend/media/
+backend/staticfiles/
+
+# ---- Backups locales ----
+backups/
+*.sql
+*.sql.gz
+
+# ---- Temporales ----
+*.tmp
+*.bak
+*.backup

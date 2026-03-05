@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentacion Tecnica - Sistema de Gestion de Archivos IGAC</title>
+    
+<style>
+    * {
+        box-sizing: border-box;
+    }
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 40px;
+        background: #f5f5f5;
+        color: #333;
+        line-height: 1.6;
+    }
+    .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+        color: #2c3e50;
+        border-bottom: 3px solid #3498db;
+        padding-bottom: 15px;
+        margin-top: 0;
+    }
+    h2 {
+        color: #34495e;
+        border-bottom: 2px solid #ecf0f1;
+        padding-bottom: 10px;
+        margin-top: 40px;
+    }
+    h3 {
+        color: #7f8c8d;
+        margin-top: 30px;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        font-size: 14px;
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 12px;
+        text-align: left;
+    }
+    th {
+        background: #3498db;
+        color: white;
+        font-weight: 600;
+    }
+    tr:nth-child(even) {
+        background: #f9f9f9;
+    }
+    tr:hover {
+        background: #f1f1f1;
+    }
+    code {
+        background: #f4f4f4;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: 'Consolas', 'Monaco', monospace;
+        font-size: 13px;
+    }
+    pre {
+        background: #2c3e50;
+        color: #ecf0f1;
+        padding: 20px;
+        border-radius: 5px;
+        overflow-x: auto;
+        font-size: 13px;
+    }
+    pre code {
+        background: transparent;
+        color: inherit;
+        padding: 0;
+    }
+    .diagram-container {
+        text-align: center;
+        margin: 30px 0;
+        padding: 20px;
+        background: #fafafa;
+        border-radius: 8px;
+        border: 1px solid #eee;
+    }
+    .diagram-container img {
+        max-width: 100%;
+        height: auto;
+    }
+    .diagram-title {
+        font-weight: bold;
+        color: #666;
+        margin-bottom: 15px;
+        font-size: 14px;
+    }
+    .mermaid-code {
+        display: none;
+    }
+    .note {
+        background: #fff3cd;
+        border-left: 4px solid #ffc107;
+        padding: 15px;
+        margin: 20px 0;
+        border-radius: 0 5px 5px 0;
+    }
+    .info {
+        background: #d1ecf1;
+        border-left: 4px solid #17a2b8;
+        padding: 15px;
+        margin: 20px 0;
+        border-radius: 0 5px 5px 0;
+    }
+    ul, ol {
+        margin: 15px 0;
+        padding-left: 30px;
+    }
+    li {
+        margin: 8px 0;
+    }
+    hr {
+        border: none;
+        border-top: 2px solid #ecf0f1;
+        margin: 40px 0;
+    }
+    .header-info {
+        background: #3498db;
+        color: white;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+    }
+    .header-info h1 {
+        color: white;
+        border-bottom-color: rgba(255,255,255,0.3);
+        margin: 0;
+    }
+    .toc {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        margin: 20px 0;
+    }
+    .toc h3 {
+        margin-top: 0;
+    }
+    .toc ul {
+        list-style-type: none;
+        padding-left: 0;
+    }
+    .toc li {
+        margin: 10px 0;
+    }
+    .toc a {
+        color: #3498db;
+        text-decoration: none;
+    }
+    .toc a:hover {
+        text-decoration: underline;
+    }
+    @media print {
+        body {
+            background: white;
+            padding: 0;
+        }
+        .container {
+            box-shadow: none;
+            padding: 20px;
+        }
+        .diagram-container {
+            page-break-inside: avoid;
+        }
+    }
+</style>
+
+</head>
+<body>
+    <div class="container">
+        <h1>Documentacion Tecnica - Sistema de Gestion de Archivos IGAC</h1>
+<h2>Informacion del Proyecto</h2>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Nombre</strong></td>
+<td>Sistema de Gestion de Archivos NetApp</td>
+</tr>
+<tr>
+<td><strong>Organizacion</strong></td>
+<td>Instituto Geografico Agustin Codazzi (IGAC)</td>
+</tr>
+<tr>
+<td><strong>Version</strong></td>
+<td>1.0.0</td>
+</tr>
+<tr>
+<td><strong>Fecha Documentacion</strong></td>
+<td>Enero 2025</td>
+</tr>
+<tr>
+<td><strong>Autor</strong></td>
+<td>Direccion de Gestion Catastral</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2>Resumen del Sistema</h2>
+<p>Sistema web empresarial para la gestion centralizada de archivos almacenados en un NAS NetApp. Incluye:</p>
+<ul>
+<li>Navegacion y busqueda de archivos en tiempo real</li>
+<li>Sistema de permisos granulares por usuario y ruta</li>
+<li>Nomenclatura inteligente con validacion IGAC e IA (GROQ)</li>
+<li>Auditoria completa de todas las operaciones</li>
+<li>Papelera de reciclaje con recuperacion</li>
+<li>Sistema de comparticion mediante enlaces publicos</li>
+<li>Notificaciones en tiempo real</li></p>
+<p></ol>
+<hr>
+<h2>Indice de Documentacion Tecnica</h2>
+<h3>1. Modelo de Datos (ERD)</h3>
+<p><strong>Archivo:</strong> [01_ERD_modelo_datos.md](01_ERD_modelo_datos.md)</p>
+<p>Diagrama Entidad-Relacion completo del sistema con:
+<ul>
+<li>19 modelos Django distribuidos en 8 aplicaciones</li>
+<li>37 relaciones de clave foranea</li>
+<li>Indices y constraints documentados</li>
+<li>Campos y tipos de cada modelo</li></p>
+<p></ol>
+<strong>Apps cubiertas:</strong>
+<ul>
+<li><code>users</code> - Usuarios, permisos, favoritos</li>
+<li><code>files</code> - Archivos indexados, colores directorio</li>
+<li><code>audit</code> - Logs de auditoria, historial permisos</li>
+<li><code>dictionary</code> - Diccionario de abreviaciones</li>
+<li><code>groq_stats</code> - Estadisticas de API keys IA</li>
+<li><code>sharing</code> - Enlaces compartidos</li>
+<li><code>trash</code> - Papelera de reciclaje</li>
+<li><code>notifications</code> - Sistema de notificaciones</li></p>
+<p></ol>
+<hr>
+<h3>2. Arquitectura de Infraestructura</h3>
+<p><strong>Archivo:</strong> [02_arquitectura_infraestructura.md](02_arquitectura_infraestructura.md)</p>
+<p>Documentacion de la infraestructura Docker con:
+<ul>
+<li>7 contenedores Docker Compose</li>
+<li>Mapeo de puertos y volumenes</li>
+<li>Diagrama de red y comunicacion</li>
+<li>Flujo de datos entre servicios</li>
+<li>Variables de entorno criticas</li></p>
+<p></ol>
+<strong>Servicios:</strong>
+<ul>
+<li>PostgreSQL 15 (Base de datos)</li>
+<li>Redis 7 (Cache + Broker Celery)</li>
+<li>Django/Gunicorn (Backend API)</li>
+<li>React/Vite (Frontend SPA)</li>
+<li>Celery Worker (Tareas asincronas)</li>
+<li>Celery Beat (Scheduler)</li>
+<li>Nginx (Reverse proxy)</li></p>
+<p></ol>
+<hr>
+<h3>3. Arquitectura Frontend</h3>
+<p><strong>Archivo:</strong> [03_arquitectura_frontend.md](03_arquitectura_frontend.md)</p>
+<p>Documentacion del frontend React con:
+<ul>
+<li>Estructura de directorios completa</li>
+<li>82 componentes TSX documentados</li>
+<li>19 paginas/vistas</li>
+<li>11 hooks personalizados</li>
+<li>Sistema de estado con Zustand</li>
+<li>Configuracion de API client</li></p>
+<p></ol>
+<strong>Tecnologias:</strong>
+<ul>
+<li>React 18 + TypeScript</li>
+<li>Vite 5.x (Build tool)</li>
+<li>TailwindCSS 3.x (Estilos)</li>
+<li>Zustand (Estado global)</li>
+<li>React Router DOM 6.x</li>
+<li>Axios (HTTP client)</li>
+<li>Lucide React (Iconos)</li></p>
+<p></ol>
+<hr>
+<h3>4. Flujos de Usuario</h3>
+<p><strong>Archivo:</strong> [04_flujos_usuario.md](04_flujos_usuario.md)</p>
+<p>Diagramas de secuencia para los principales flujos:
+<ul>
+<li>Autenticacion (login, logout, recuperar contrasena)</li>
+<li>Navegacion de archivos</li>
+<li>Subida de archivos (simple y carpeta)</li>
+<li>Descarga (archivo y ZIP)</li>
+<li>Renombrado inteligente con IA</li>
+<li>Sistema de permisos</li>
+<li>Papelera de reciclaje</li>
+<li>Compartir archivos</li>
+<li>Notificaciones</li>
+<li>Auditoria</li></p>
+<p></ol>
+<strong>Incluye:</strong>
+<ul>
+<li>Diagramas de secuencia (Mermaid)</li>
+<li>Diagramas de estado (archivo, usuario)</li>
+<li>Flujo de validacion IGAC</li></p>
+<p></ol>
+<hr>
+<h3>5. API REST Endpoints</h3>
+<p><strong>Archivo:</strong> [05_api_endpoints.md](05_api_endpoints.md)</p>
+<p>Documentacion completa de la API REST:
+<ul>
+<li>100+ endpoints documentados</li>
+<li>Request/Response examples</li>
+<li>Codigos HTTP y errores</li>
+<li>Headers requeridos</li>
+<li>Rate limiting</li>
+<li>Diagrama de seguridad</li></p>
+<p></ol>
+<strong>Categorias:</strong>
+<ul>
+<li>Autenticacion JWT</li>
+<li>Usuarios y permisos</li>
+<li>Operaciones de archivos</li>
+<li>Smart Naming (IA)</li>
+<li>Diccionario</li>
+<li>Auditoria</li>
+<li>Estadisticas</li>
+<li>Administracion</li>
+<li>Compartir</li>
+<li>Papelera</li>
+<li>Notificaciones</li></p>
+<p></ol>
+<hr>
+<h2>Stack Tecnologico</h2>
+<p>``<code>
++--------------------------------------------------+
+|                    FRONTEND                       |
+|  React 18 | TypeScript | Vite | TailwindCSS      |
+|  Zustand | React Router | Axios | Lucide         |
++--------------------------------------------------+
+                        |
+                        v
++--------------------------------------------------+
+|                 REVERSE PROXY                     |
+|          Nginx (SSL/TLS, Rate Limiting)          |
++--------------------------------------------------+
+                        |
+                        v
++--------------------------------------------------+
+|                    BACKEND                        |
+|  Django 4.x | DRF | JWT | Gunicorn              |
+|  Celery Worker | Celery Beat                     |
++--------------------------------------------------+
+           |                    |
+           v                    v
++-------------------+  +-------------------+
+|    PostgreSQL 15  |  |     Redis 7       |
+|    (Datos)        |  |  (Cache + Queue)  |
++-------------------+  +-------------------+
+                        |
+                        v
++--------------------------------------------------+
+|              ALMACENAMIENTO EXTERNO              |
+|  NetApp NAS (CIFS/SMB) | GROQ AI API            |
++--------------------------------------------------+
+</code>`<code></p>
+<hr>
+<h2>Estadisticas del Codigo</h2>
+<table>
+<thead>
+<tr>
+<th>Componente</th>
+<th>Archivos</th>
+<th>Lineas (aprox)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Backend Python</td>
+<td>~50</td>
+<td>~8,000</td>
+</tr>
+<tr>
+<td>Frontend TSX</td>
+<td>82</td>
+<td>~12,000</td>
+</tr>
+<tr>
+<td>Frontend TS</td>
+<td>39</td>
+<td>~3,000</td>
+</tr>
+<tr>
+<td>Documentacion</td>
+<td>6</td>
+<td>~3,500</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td><strong>~177</strong></td>
+<td><strong>~26,500</strong></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2>Requisitos del Sistema</h2>
+<h3>Servidor</h3>
+<table>
+<thead>
+<tr>
+<th>Recurso</th>
+<th>Minimo</th>
+<th>Recomendado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CPU</td>
+<td>4 cores</td>
+<td>8 cores</td>
+</tr>
+<tr>
+<td>RAM</td>
+<td>8 GB</td>
+<td>16 GB</td>
+</tr>
+<tr>
+<td>Disco</td>
+<td>50 GB</td>
+<td>100 GB SSD</td>
+</tr>
+<tr>
+<td>SO</td>
+<td>Ubuntu 20.04+</td>
+<td>Ubuntu 22.04</td>
+</tr>
+<tr>
+<td>Docker</td>
+<td>20.10+</td>
+<td>24.x</td>
+</tr>
+<tr>
+<td>Docker Compose</td>
+<td>2.x</td>
+<td>2.x</td>
+</tr>
+</tbody>
+</table>
+<h3>Cliente</h3>
+<ul>
+<li>Navegador moderno (Chrome 90+, Firefox 90+, Edge 90+)</li>
+<li>Resolucion minima: 1280x720</li>
+<li>JavaScript habilitado</li></p>
+<p></ol>
+<hr>
+<h2>Contacto</h2>
+<p>Para dudas tecnicas sobre esta documentacion:</p>
+<ul>
+<li><strong>Subdireccion:</strong> Direccion de Gestion Catastral</li>
+<li><strong>Area:</strong> Sistemas de Informacion</li>
+<li><strong>Email:</strong> [sistemas@igac.gov.co]</li></p>
+<p></ol>
+<hr>
+<h2>Historial de Versiones</h2>
+<table>
+<thead>
+<tr>
+<th>Version</th>
+<th>Fecha</th>
+<th>Cambios</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1.0.0</td>
+<td>2025-01-07</td>
+<td>Documentacion inicial completa</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2>Como Usar los Diagramas</h2>
+<p>Todos los diagramas estan escritos en formato <strong>Mermaid</strong>, compatible con:</p>
+<ul>
+<li>GitHub/GitLab (renderizado automatico)</li>
+<li>VSCode con extension Mermaid</li>
+<li>Notion, Obsidian</li>
+<li>[Mermaid Live Editor](https://mermaid.live/)</li></p>
+<p></ol>
+Para renderizar localmente:
+</code>`<code>bash
+<h1>Instalar mermaid-cli</h1>
+npm install -g @mermaid-js/mermaid-cli</p>
+<h1>Generar PNG</h1>
+mmdc -i 01_ERD_modelo_datos.md -o erd.png</p>
+<h1>Generar SVG</h1>
+mmdc -i 01_ERD_modelo_datos.md -o erd.svg -f svg
+</code>``
+</p>
+    </div>
+</body>
+</html>

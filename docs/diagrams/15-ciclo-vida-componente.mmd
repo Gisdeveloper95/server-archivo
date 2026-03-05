@@ -1,0 +1,23 @@
+graph TD
+    MT["🔌 MOUNT"]
+    IN["⚙️ INIT<br/>useEffect"]
+    RN["🎨 RENDER<br/>Dibuja UI"]
+    IT["👆 INTERACT<br/>Usuario"]
+    UP["🔄 UPDATE<br/>Callbacks"]
+    ST["🧠 STORE<br/>Actualiza"]
+    RE["🎨 RE-RENDER"]
+    UM["❌ UNMOUNT"]
+    
+    MT -->|useEffect| IN
+    IN -->|Datos| RN
+    RN -->|Interacción| IT
+    IT -->|Trigger| UP
+    UP -->|Escribe| ST
+    ST -->|Notifica| RE
+    RE -->|Navega| UM
+    
+    style MT fill:#ff9999
+    style IN fill:#ffcccc
+    style RN fill:#99ccff
+    style UP fill:#99ff99
+    style ST fill:#ffffcc

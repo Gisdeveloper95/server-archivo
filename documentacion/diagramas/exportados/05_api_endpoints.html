@@ -1,0 +1,1716 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API REST Endpoints - Sistema de Gestion de Archivos IGAC</title>
+    
+<style>
+    * {
+        box-sizing: border-box;
+    }
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 40px;
+        background: #f5f5f5;
+        color: #333;
+        line-height: 1.6;
+    }
+    .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+        color: #2c3e50;
+        border-bottom: 3px solid #3498db;
+        padding-bottom: 15px;
+        margin-top: 0;
+    }
+    h2 {
+        color: #34495e;
+        border-bottom: 2px solid #ecf0f1;
+        padding-bottom: 10px;
+        margin-top: 40px;
+    }
+    h3 {
+        color: #7f8c8d;
+        margin-top: 30px;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        font-size: 14px;
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 12px;
+        text-align: left;
+    }
+    th {
+        background: #3498db;
+        color: white;
+        font-weight: 600;
+    }
+    tr:nth-child(even) {
+        background: #f9f9f9;
+    }
+    tr:hover {
+        background: #f1f1f1;
+    }
+    code {
+        background: #f4f4f4;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: 'Consolas', 'Monaco', monospace;
+        font-size: 13px;
+    }
+    pre {
+        background: #2c3e50;
+        color: #ecf0f1;
+        padding: 20px;
+        border-radius: 5px;
+        overflow-x: auto;
+        font-size: 13px;
+    }
+    pre code {
+        background: transparent;
+        color: inherit;
+        padding: 0;
+    }
+    .diagram-container {
+        text-align: center;
+        margin: 30px 0;
+        padding: 20px;
+        background: #fafafa;
+        border-radius: 8px;
+        border: 1px solid #eee;
+    }
+    .diagram-container img {
+        max-width: 100%;
+        height: auto;
+    }
+    .diagram-title {
+        font-weight: bold;
+        color: #666;
+        margin-bottom: 15px;
+        font-size: 14px;
+    }
+    .mermaid-code {
+        display: none;
+    }
+    .note {
+        background: #fff3cd;
+        border-left: 4px solid #ffc107;
+        padding: 15px;
+        margin: 20px 0;
+        border-radius: 0 5px 5px 0;
+    }
+    .info {
+        background: #d1ecf1;
+        border-left: 4px solid #17a2b8;
+        padding: 15px;
+        margin: 20px 0;
+        border-radius: 0 5px 5px 0;
+    }
+    ul, ol {
+        margin: 15px 0;
+        padding-left: 30px;
+    }
+    li {
+        margin: 8px 0;
+    }
+    hr {
+        border: none;
+        border-top: 2px solid #ecf0f1;
+        margin: 40px 0;
+    }
+    .header-info {
+        background: #3498db;
+        color: white;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+    }
+    .header-info h1 {
+        color: white;
+        border-bottom-color: rgba(255,255,255,0.3);
+        margin: 0;
+    }
+    .toc {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        margin: 20px 0;
+    }
+    .toc h3 {
+        margin-top: 0;
+    }
+    .toc ul {
+        list-style-type: none;
+        padding-left: 0;
+    }
+    .toc li {
+        margin: 10px 0;
+    }
+    .toc a {
+        color: #3498db;
+        text-decoration: none;
+    }
+    .toc a:hover {
+        text-decoration: underline;
+    }
+    @media print {
+        body {
+            background: white;
+            padding: 0;
+        }
+        .container {
+            box-shadow: none;
+            padding: 20px;
+        }
+        .diagram-container {
+            page-break-inside: avoid;
+        }
+    }
+</style>
+
+</head>
+<body>
+    <div class="container">
+        <h1>API REST Endpoints - Sistema de Gestion de Archivos IGAC</h1>
+<h2>Resumen</h2>
+<ul>
+<li><strong>Framework:</strong> Django REST Framework</li>
+<li><strong>Autenticacion:</strong> JWT (JSON Web Tokens)</li>
+<li><strong>Base URL:</strong> <code>/api/</code></li>
+<li><strong>Formato:</strong> JSON</li>
+<li><strong>Paginacion:</strong> Basada en pagina (page, per_page)</li></p>
+<p></ol>
+<hr>
+<h2>Diagrama General de API</h2>
+<div class="diagram-container">
+    <div class="diagram-title">Diagrama 1</div>
+    <img src="imagenes/05_api_endpoints_diagrama_01.png" alt="Diagrama 1">
+</div>
+<hr>
+<h2>1. Autenticacion (<code>/api/auth/</code>)</h2>
+<table>
+<thead>
+<tr>
+<th>Metodo</th>
+<th>Endpoint</th>
+<th>Descripcion</th>
+<th>Auth</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>POST</td>
+<td><code>/auth/login</code></td>
+<td>Iniciar sesion</td>
+<td>No</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/auth/logout</code></td>
+<td>Cerrar sesion</td>
+<td>Si</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/auth/me</code></td>
+<td>Obtener usuario actual</td>
+<td>Si</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/auth/change_password</code></td>
+<td>Cambiar contrasena</td>
+<td>Si</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/auth/refresh</code></td>
+<td>Refrescar token JWT</td>
+<td>Si</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/auth/forgot-password</code></td>
+<td>Solicitar reset password</td>
+<td>No</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/auth/reset-password</code></td>
+<td>Resetear contrasena</td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+<h3>Request/Response Examples</h3>
+<p>``<code>yaml
+<h1>POST /api/auth/login</h1>
+Request:
+  email: "usuario@igac.gov.co"
+  password: "<strong><em></strong></em>**"</p>
+<p>Response:
+  access: "eyJhbGciOiJIUzI1NiIs..."
+  refresh: "eyJhbGciOiJIUzI1NiIs..."
+  user:
+    id: 1
+    username: "usuario"
+    email: "usuario@igac.gov.co"
+    full_name: "Usuario Ejemplo"
+    role: "consultation_edit"
+</code>`<code></p>
+<hr>
+<h2>2. Usuarios (</code>/api/users/<code>)</h2>
+<table>
+<thead>
+<tr>
+<th>Metodo</th>
+<th>Endpoint</th>
+<th>Descripcion</th>
+<th>Auth</th>
+<th>Rol</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td></code>/users<code></td>
+<td>Listar usuarios</td>
+<td>Si</td>
+<td>Admin+</td>
+</tr>
+<tr>
+<td>POST</td>
+<td></code>/users<code></td>
+<td>Crear usuario</td>
+<td>Si</td>
+<td>Admin+</td>
+</tr>
+<tr>
+<td>GET</td>
+<td></code>/users/{id}<code></td>
+<td>Detalle usuario</td>
+<td>Si</td>
+<td>Admin+</td>
+</tr>
+<tr>
+<td>PUT</td>
+<td></code>/users/{id}<code></td>
+<td>Actualizar usuario</td>
+<td>Si</td>
+<td>Admin+</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td></code>/users/{id}<code></td>
+<td>Eliminar usuario</td>
+<td>Si</td>
+<td>Superadmin</td>
+</tr>
+<tr>
+<td>GET</td>
+<td></code>/users/me<code></td>
+<td>Usuario actual</td>
+<td>Si</td>
+<td>Todos</td>
+</tr>
+<tr>
+<td>GET</td>
+<td></code>/users/by_role<code></td>
+<td>Filtrar por rol</td>
+<td>Si</td>
+<td>Admin+</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2>3. Permisos (</code>/api/permissions/<code>)</h2>
+<table>
+<thead>
+<tr>
+<th>Metodo</th>
+<th>Endpoint</th>
+<th>Descripcion</th>
+<th>Auth</th>
+<th>Rol</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td></code>/permissions<code></td>
+<td>Listar permisos</td>
+<td>Si</td>
+<td>Admin+</td>
+</tr>
+<tr>
+<td>POST</td>
+<td></code>/permissions<code></td>
+<td>Crear permiso</td>
+<td>Si</td>
+<td>Admin+</td>
+</tr>
+<tr>
+<td>GET</td>
+<td></code>/permissions/{id}<code></td>
+<td>Detalle permiso</td>
+<td>Si</td>
+<td>Admin+</td>
+</tr>
+<tr>
+<td>PUT</td>
+<td></code>/permissions/{id}<code></td>
+<td>Actualizar permiso</td>
+<td>Si</td>
+<td>Admin+</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td></code>/permissions/{id}<code></td>
+<td>Eliminar permiso</td>
+<td>Si</td>
+<td>Admin+</td>
+</tr>
+<tr>
+<td>GET</td>
+<td></code>/permissions/by_user?user_id=X<code></td>
+<td>Permisos de usuario</td>
+<td>Si</td>
+<td>Admin+</td>
+</tr>
+<tr>
+<td>GET</td>
+<td></code>/permissions/by_path?path=X<code></td>
+<td>Permisos de ruta</td>
+<td>Si</td>
+<td>Admin+</td>
+</tr>
+<tr>
+<td>POST</td>
+<td></code>/permissions/{id}/revoke<code></td>
+<td>Revocar permiso</td>
+<td>Si</td>
+<td>Admin+</td>
+</tr>
+</tbody>
+</table>
+<h3>Estructura de Permiso</h3>
+<p></code>`<code>yaml
+UserPermission:
+  id: 1
+  user: 5
+  base_path: "/proyectos/2024"
+  can_read: true
+  can_write: true
+  can_delete: false
+  can_create_directories: true
+  edit_permission_level: "upload_own"  # upload_only | upload_own | upload_all
+  inheritance_mode: "total"  # total | blocked | limited_depth | partial_write
+  blocked_paths: ["/proyectos/2024/confidencial"]
+  read_only_paths: ["/proyectos/2024/archivos_finales"]
+  max_depth: null  # o numero para limited_depth
+  expires_at: "2025-12-31T23:59:59Z"
+  is_active: true
+</code>`<code></p>
+<hr>
+<h2>4. Operaciones de Archivos (</code>/api/file-ops/<code>)</h2>
+<h3>4.1 Navegacion y Listado</h3>
+<table>
+<thead>
+<tr>
+<th>Metodo</th>
+<th>Endpoint</th>
+<th>Descripcion</th>
+<th>Auth</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td></code>/file-ops/browse?path=X<code></td>
+<td>Navegar directorio</td>
+<td>Si</td>
+</tr>
+<tr>
+<td>GET</td>
+<td></code>/file-ops/search?q=X&path=Y<code></td>
+<td>Buscar archivos</td>
+<td>Si</td>
+</tr>
+<tr>
+<td>GET</td>
+<td></code>/file-ops/path_info?path=X<code></td>
+<td>Info caracteres disponibles</td>
+<td>Si</td>
+</tr>
+<tr>
+<td>GET</td>
+<td></code>/file-ops/check-permissions?path=X<code></td>
+<td>Verificar permisos</td>
+<td>Si</td>
+</tr>
+</tbody>
+</table>
+</code>`<code>yaml
+<h1>GET /api/file-ops/browse?path=/proyectos</h1>
+Response:
+  path: "/proyectos"
+  items:
+<ul>
+<li>name: "2024"</li>
+</ul>
+      path: "/proyectos/2024"
+      is_directory: true
+      size: 0
+      size_formatted: "15 elementos"
+      item_count: 15
+      modified_date: "2024-01-15T10:30:00Z"
+      can_write: true
+      can_delete: false
+<ul>
+<li>name: "informe.pdf"</li>
+</ul>
+      path: "/proyectos/informe.pdf"
+      is_directory: false
+      size: 1048576
+      size_formatted: "1.0 MB"
+      extension: ".pdf"
+      modified_date: "2024-01-14T15:45:00Z"
+  breadcrumbs:
+<ul>
+<li>name: "Inicio"</li>
+</ul>
+      path: ""
+<ul>
+<li>name: "proyectos"</li>
+</ul>
+      path: "/proyectos"
+  total: 2
+</code>`<code></p>
+<h3>4.2 Operaciones CRUD</h3>
+<table>
+<thead>
+<tr>
+<th>Metodo</th>
+<th>Endpoint</th>
+<th>Descripcion</th>
+<th>Auth</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>POST</td>
+<td></code>/file-ops/upload<code></td>
+<td>Subir archivo(s)</td>
+<td>Si</td>
+</tr>
+<tr>
+<td>POST</td>
+<td></code>/file-ops/upload-batch<code></td>
+<td>Subir carpeta completa</td>
+<td>Si</td>
+</tr>
+<tr>
+<td>POST</td>
+<td></code>/file-ops/create-folder<code></td>
+<td>Crear carpeta</td>
+<td>Si</td>
+</tr>
+<tr>
+<td>GET</td>
+<td></code>/file-ops/download?path=X<code></td>
+<td>Descargar archivo</td>
+<td>Si</td>
+</tr>
+<tr>
+<td>GET</td>
+<td></code>/file-ops/download_folder?path=X<code></td>
+<td>Descargar carpeta ZIP</td>
+<td>Si</td>
+</tr>
+<tr>
+<td>GET</td>
+<td></code>/file-ops/view?path=X<code></td>
+<td>Ver archivo inline</td>
+<td>Si</td>
+</tr>
+<tr>
+<td>POST</td>
+<td></code>/file-ops/delete<code></td>
+<td>Eliminar (a papelera)</td>
+<td>Si</td>
+</tr>
+<tr>
+<td>POST</td>
+<td></code>/file-ops/delete-batch<code></td>
+<td>Eliminar multiples</td>
+<td>Si</td>
+</tr>
+<tr>
+<td>POST</td>
+<td></code>/file-ops/rename<code></td>
+<td>Renombrar</td>
+<td>Si</td>
+</tr>
+<tr>
+<td>POST</td>
+<td></code>/file-ops/copy_item<code></td>
+<td>Copiar archivo/carpeta</td>
+<td>Si</td>
+</tr>
+<tr>
+<td>POST</td>
+<td></code>/file-ops/move_item<code></td>
+<td>Mover archivo/carpeta</td>
+<td>Si</td>
+</tr>
+</tbody>
+</table>
+</code>`<code>yaml
+<h1>POST /api/file-ops/upload</h1>
+Content-Type: multipart/form-data
+Request:
+  path: "/proyectos/2024"
+  files: [archivo1.pdf, archivo2.xlsx]</p>
+<p>Response:
+  success: true
+  uploaded:
+<ul>
+<li>name: "archivo1.pdf"</li>
+</ul>
+      path: "/proyectos/2024/archivo1.pdf"
+<ul>
+<li>name: "archivo2.xlsx"</li>
+</ul>
+      path: "/proyectos/2024/archivo2.xlsx"
+  errors: []
+</code>`<code></p>
+<h3>4.3 Detalles y Metadatos</h3>
+<table>
+<thead>
+<tr>
+<th>Metodo</th>
+<th>Endpoint</th>
+<th>Descripcion</th>
+<th>Auth</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td></code>/file-ops/file-details?path=X<code></td>
+<td>Detalles de archivo</td>
+<td>Si</td>
+</tr>
+<tr>
+<td>GET</td>
+<td></code>/file-ops/folder_details?path=X<code></td>
+<td>Detalles de carpeta</td>
+<td>Si</td>
+</tr>
+<tr>
+<td>GET</td>
+<td></code>/file-ops/folder_permissions?path=X<code></td>
+<td>Permisos de carpeta</td>
+<td>Si</td>
+</tr>
+</tbody>
+</table>
+</code>`<code>yaml
+<h1>GET /api/file-ops/file-details?path=/proyectos/informe.pdf</h1>
+Response:
+  success: true
+  file:
+    name: "informe.pdf"
+    path: "/proyectos/informe.pdf"
+    windows_path: "\\\\NAS\\DirGesCat\\proyectos\\informe.pdf"
+    extension: ".pdf"
+    mime_type: "application/pdf"
+    size: 1048576
+    size_formatted: "1.0 MB"
+    created_at: 1705312200
+    modified_at: 1705398600
+  upload_info:
+    uploaded_by: "usuario"
+    uploaded_by_full_name: "Usuario Ejemplo"
+    uploaded_at: "2024-01-15T10:30:00Z"
+    ip_address: "192.168.1.100"
+  access_history:
+<ul>
+<li>action: "download"</li>
+</ul>
+      user: "otro_usuario"
+      date: "2024-01-16T09:00:00Z"
+      ip: "192.168.1.101"
+  stats:
+    total_downloads: 5
+    total_views: 12
+</code>`<code></p>
+<hr>
+<h2>5. Smart Naming - IA (</code>/api/file-ops/<code>)</h2>
+<table>
+<thead>
+<tr>
+<th>Metodo</th>
+<th>Endpoint</th>
+<th>Descripcion</th>
+<th>Auth</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>POST</td>
+<td></code>/file-ops/smart-validate/<code></td>
+<td>Validar nombre IGAC</td>
+<td>Si</td>
+</tr>
+<tr>
+<td>POST</td>
+<td></code>/file-ops/smart-rename/<code></td>
+<td>Sugerencia con IA</td>
+<td>Si</td>
+</tr>
+<tr>
+<td>POST</td>
+<td></code>/file-ops/smart-rename-batch/<code></td>
+<td>Sugerencias batch</td>
+<td>Si</td>
+</tr>
+<tr>
+<td>POST</td>
+<td></code>/file-ops/validate-batch<code></td>
+<td>Validar multiples</td>
+<td>Si</td>
+</tr>
+<tr>
+<td>GET</td>
+<td></code>/file-ops/dictionary-search/?q=X<code></td>
+<td>Buscar en diccionario</td>
+<td>Si</td>
+</tr>
+<tr>
+<td>GET</td>
+<td></code>/file-ops/naming-exemptions/<code></td>
+<td>Exenciones del usuario</td>
+<td>Si</td>
+</tr>
+</tbody>
+</table>
+</code>`<code>yaml
+<h1>POST /api/file-ops/smart-validate/</h1>
+Request:
+  name: "Mi Documento Final (v2).xlsx"
+  current_path: "/proyectos"</p>
+<p>Response:
+  success: true
+  valid: false
+  errors:
+<ul>
+<li>"Espacios no permitidos, usar guion bajo"</li>
+<li>"Parentesis no permitidos"</li>
+<li>"Palabra prohibida: final"</li>
+</ul>
+  warnings:
+<ul>
+<li>"Se agregara fecha actual: 20240115"</li>
+</ul>
+  original_name: "Mi Documento Final (v2).xlsx"
+  formatted_name: "mi_documento_v2_20240115.xlsx"
+  formatted_base: "mi_documento_v2_20240115"
+  extension: ".xlsx"
+  format_changes:
+<ul>
+<li>"Espacios reemplazados por _"</li>
+<li>"Parentesis eliminados"</li>
+<li>"Convertido a minusculas"</li>
+<li>"Palabra 'final' removida"</li>
+</ul>
+  parts_analysis:
+<ul>
+<li>type: "generic"</li>
+</ul>
+      value: "mi"
+      source: "preserved"
+<ul>
+<li>type: "dictionary"</li>
+</ul>
+      value: "documento"
+      meaning: "DOC"
+      source: "dictionary"
+<ul>
+<li>type: "number"</li>
+</ul>
+      value: "v2"
+      source: "preserved"
+<ul>
+<li>type: "date"</li>
+</ul>
+      value: "20240115"
+      source: "warning"
+  unknown_parts: []
+  needs_ai: false
+  detected_date: null
+  user_exemptions:
+    exempt_from_naming_rules: false
+    exempt_from_path_limit: false
+    exempt_from_name_length: false
+</code>`<code></p>
+<p></code>`<code>yaml
+<h1>POST /api/file-ops/smart-rename/</h1>
+Request:
+  name: "presentacion proyecto catastro.pptx"
+  current_path: "/proyectos/catastro"</p>
+<p>Response:
+  success: true
+  original_name: "presentacion proyecto catastro.pptx"
+  suggested_name: "pres_proy_cat_20240115.pptx"
+  suggested_base: "pres_proy_cat_20240115"
+  valid: true
+  errors: []
+  warnings: []
+  format_changes:
+<ul>
+<li>"Abreviado: presentacion -> pres"</li>
+<li>"Abreviado: proyecto -> proy"</li>
+<li>"Abreviado: catastro -> cat"</li>
+<li>"Fecha agregada"</li>
+</ul>
+  used_ai: true
+  ai_metadata:
+    model: "llama-3.3-70b-versatile"
+    tokens_used: 150
+    response_time_ms: 450
+  parts_analysis:
+<ul>
+<li>type: "dictionary"</li>
+</ul>
+      value: "pres"
+      meaning: "Presentacion"
+<ul>
+<li>type: "dictionary"</li>
+</ul>
+      value: "proy"
+      meaning: "Proyecto"
+<ul>
+<li>type: "dictionary"</li>
+</ul>
+      value: "cat"
+      meaning: "Catastro"
+<ul>
+<li>type: "date"</li>
+</ul>
+      value: "20240115"
+</code>`<code></p>
+<hr>
+<h2>6. Diccionario (</code>/api/dictionary/<code>)</h2>
+<table>
+<thead>
+<tr>
+<th>Metodo</th>
+<th>Endpoint</th>
+<th>Descripcion</th>
+<th>Auth</th>
+<th>Rol</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td></code>/dictionary<code></td>
+<td>Listar terminos</td>
+<td>Si</td>
+<td>Todos</td>
+</tr>
+<tr>
+<td>GET</td>
+<td></code>/dictionary/{id}<code></td>
+<td>Detalle termino</td>
+<td>Si</td>
+<td>Todos</td>
+</tr>
+<tr>
+<td>POST</td>
+<td></code>/dictionary<code></td>
+<td>Crear termino</td>
+<td>Si</td>
+<td>Superadmin</td>
+</tr>
+<tr>
+<td>PUT</td>
+<td></code>/dictionary/{id}<code></td>
+<td>Actualizar termino</td>
+<td>Si</td>
+<td>Superadmin</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td></code>/dictionary/{id}<code></td>
+<td>Eliminar termino</td>
+<td>Si</td>
+<td>Superadmin</td>
+</tr>
+<tr>
+<td>GET</td>
+<td></code>/dictionary/active<code></td>
+<td>Solo terminos activos</td>
+<td>Si</td>
+<td>Todos</td>
+</tr>
+<tr>
+<td>POST</td>
+<td></code>/dictionary/{id}/toggle-active<code></td>
+<td>Activar/desactivar</td>
+<td>Si</td>
+<td>Superadmin</td>
+</tr>
+<tr>
+<td>GET</td>
+<td></code>/dictionary/export-csv<code></td>
+<td>Exportar a CSV</td>
+<td>Si</td>
+<td>Todos</td>
+</tr>
+</tbody>
+</table>
+</code>`<code>yaml
+DictionaryTerm:
+  id: 1
+  key: "proy"
+  value: "Proyecto"
+  description: "Abreviacion estandar para proyecto"
+  category: "general"
+  is_active: true
+  created_by: "admin"
+  created_at: "2024-01-01T00:00:00Z"
+</code>`<code></p>
+<hr>
+<h2>7. Abreviaciones IA (</code>/api/ai-abbreviations/<code>)</h2>
+<table>
+<thead>
+<tr>
+<th>Metodo</th>
+<th>Endpoint</th>
+<th>Descripcion</th>
+<th>Auth</th>
+<th>Rol</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td></code>/ai-abbreviations<code></td>
+<td>Listar abreviaciones</td>
+<td>Si</td>
+<td>Superadmin</td>
+</tr>
+<tr>
+<td>GET</td>
+<td></code>/ai-abbreviations/{id}<code></td>
+<td>Detalle</td>
+<td>Si</td>
+<td>Superadmin</td>
+</tr>
+<tr>
+<td>GET</td>
+<td></code>/ai-abbreviations/summary<code></td>
+<td>Resumen estadisticas</td>
+<td>Si</td>
+<td>Superadmin</td>
+</tr>
+<tr>
+<td>POST</td>
+<td></code>/ai-abbreviations/{id}/approve<code></td>
+<td>Aprobar</td>
+<td>Si</td>
+<td>Superadmin</td>
+</tr>
+<tr>
+<td>POST</td>
+<td></code>/ai-abbreviations/{id}/reject<code></td>
+<td>Rechazar</td>
+<td>Si</td>
+<td>Superadmin</td>
+</tr>
+<tr>
+<td>POST</td>
+<td></code>/ai-abbreviations/{id}/correct<code></td>
+<td>Corregir</td>
+<td>Si</td>
+<td>Superadmin</td>
+</tr>
+<tr>
+<td>POST</td>
+<td></code>/ai-abbreviations/{id}/add-to-dictionary<code></td>
+<td>Agregar a diccionario</td>
+<td>Si</td>
+<td>Superadmin</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2>8. Favoritos (</code>/api/favorites/<code>)</h2>
+<table>
+<thead>
+<tr>
+<th>Metodo</th>
+<th>Endpoint</th>
+<th>Descripcion</th>
+<th>Auth</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td></code>/favorites<code></td>
+<td>Listar favoritos</td>
+<td>Si</td>
+</tr>
+<tr>
+<td>POST</td>
+<td></code>/favorites<code></td>
+<td>Agregar favorito</td>
+<td>Si</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td></code>/favorites/{id}<code></td>
+<td>Eliminar favorito</td>
+<td>Si</td>
+</tr>
+<tr>
+<td>POST</td>
+<td></code>/favorites/reorder<code></td>
+<td>Reordenar favoritos</td>
+<td>Si</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2>9. Auditoria (</code>/api/audit/<code>)</h2>
+<table>
+<thead>
+<tr>
+<th>Metodo</th>
+<th>Endpoint</th>
+<th>Descripcion</th>
+<th>Auth</th>
+<th>Rol</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td></code>/audit<code></td>
+<td>Listar logs</td>
+<td>Si</td>
+<td>Admin+</td>
+</tr>
+<tr>
+<td>GET</td>
+<td></code>/audit/{id}<code></td>
+<td>Detalle log</td>
+<td>Si</td>
+<td>Admin+</td>
+</tr>
+<tr>
+<td>GET</td>
+<td></code>/audit/stats<code></td>
+<td>Estadisticas</td>
+<td>Si</td>
+<td>Admin+</td>
+</tr>
+<tr>
+<td>GET</td>
+<td></code>/audit/directory-audit?path=X<code></td>
+<td>Auditoria por directorio</td>
+<td>Si</td>
+<td>Admin+</td>
+</tr>
+<tr>
+<td>GET</td>
+<td></code>/audit/file-tracking?path=X<code></td>
+<td>Seguimiento archivo</td>
+<td>Si</td>
+<td>Admin+</td>
+</tr>
+<tr>
+<td>GET</td>
+<td></code>/audit/dashboard<code></td>
+<td>Dashboard auditoria</td>
+<td>Si</td>
+<td>Admin+</td>
+</tr>
+<tr>
+<td>POST</td>
+<td></code>/audit/analyze-zip<code></td>
+<td>Analizar ZIP</td>
+<td>Si</td>
+<td>Admin+</td>
+</tr>
+</tbody>
+</table>
+<h3>Filtros de Auditoria</h3>
+<p></code>`<code>yaml
+<h1>GET /api/audit/?user=5&action=download&from=2024-01-01&to=2024-01-31&path=/proyectos</h1>
+Response:
+  count: 150
+  next: "/api/audit/?page=2&..."
+  previous: null
+  results:
+<ul>
+<li>id: 1234</li>
+</ul>
+      user: 5
+      username: "usuario"
+      user_role: "consultation_edit"
+      action: "download"
+      target_path: "/proyectos/informe.pdf"
+      target_name: "informe.pdf"
+      file_size: 1048576
+      ip_address: "192.168.1.100"
+      user_agent: "Mozilla/5.0..."
+      success: true
+      timestamp: "2024-01-15T10:30:00Z"
+</code>`<code></p>
+<hr>
+<h2>10. Estadisticas (</code>/api/stats/<code>)</h2>
+<table>
+<thead>
+<tr>
+<th>Metodo</th>
+<th>Endpoint</th>
+<th>Descripcion</th>
+<th>Auth</th>
+<th>Rol</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td></code>/stats<code></td>
+<td>Estadisticas globales</td>
+<td>Si</td>
+<td>Admin+</td>
+</tr>
+<tr>
+<td>GET</td>
+<td></code>/stats/user_stats<code></td>
+<td>Stats por usuario</td>
+<td>Si</td>
+<td>Admin+</td>
+</tr>
+</tbody>
+</table>
+</code>`<code>yaml
+<h1>GET /api/stats</h1>
+Response:
+  total_files: 125000
+  total_directories: 8500
+  total_size_bytes: 5368709120
+  total_size_formatted: "5.0 GB"
+  users:
+    total: 85
+    active: 78
+    by_role:
+      consultation: 50
+      consultation_edit: 20
+      admin: 10
+      superadmin: 5
+  recent_activity:
+    uploads_today: 45
+    downloads_today: 230
+    active_users_today: 35
+</code>`<code></p>
+<hr>
+<h2>11. GROQ Stats (</code>/api/groq-stats/<code>)</h2>
+<table>
+<thead>
+<tr>
+<th>Metodo</th>
+<th>Endpoint</th>
+<th>Descripcion</th>
+<th>Auth</th>
+<th>Rol</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td></code>/groq-stats<code></td>
+<td>Listar API keys</td>
+<td>Si</td>
+<td>Admin+</td>
+</tr>
+<tr>
+<td>GET</td>
+<td></code>/groq-stats/{id}<code></td>
+<td>Detalle key</td>
+<td>Si</td>
+<td>Admin+</td>
+</tr>
+<tr>
+<td>GET</td>
+<td></code>/groq-stats/pool-summary<code></td>
+<td>Resumen pool</td>
+<td>Si</td>
+<td>Admin+</td>
+</tr>
+<tr>
+<td>POST</td>
+<td></code>/groq-stats/{id}/reset-stats<code></td>
+<td>Resetear stats</td>
+<td>Si</td>
+<td>Superadmin</td>
+</tr>
+<tr>
+<td>POST</td>
+<td></code>/groq-stats/{id}/toggle-active<code></td>
+<td>Activar/desactivar</td>
+<td>Si</td>
+<td>Superadmin</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2>12. Administracion (</code>/api/admin/<code>)</h2>
+<table>
+<thead>
+<tr>
+<th>Metodo</th>
+<th>Endpoint</th>
+<th>Descripcion</th>
+<th>Auth</th>
+<th>Rol</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td></code>/admin/users<code></td>
+<td>Listar usuarios</td>
+<td>Si</td>
+<td>Superadmin</td>
+</tr>
+<tr>
+<td>POST</td>
+<td></code>/admin/users<code></td>
+<td>Crear usuario</td>
+<td>Si</td>
+<td>Superadmin</td>
+</tr>
+<tr>
+<td>PATCH</td>
+<td></code>/admin/users/{id}<code></td>
+<td>Editar usuario</td>
+<td>Si</td>
+<td>Superadmin</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td></code>/admin/users/{id}<code></td>
+<td>Eliminar usuario</td>
+<td>Si</td>
+<td>Superadmin</td>
+</tr>
+<tr>
+<td>POST</td>
+<td></code>/admin/users/{id}/resend-credentials<code></td>
+<td>Reenviar credenciales</td>
+<td>Si</td>
+<td>Superadmin</td>
+</tr>
+<tr>
+<td>GET</td>
+<td></code>/admin/users/{id}/permissions<code></td>
+<td>Ver permisos</td>
+<td>Si</td>
+<td>Superadmin</td>
+</tr>
+<tr>
+<td>POST</td>
+<td></code>/admin/users/{id}/permissions<code></td>
+<td>Asignar permisos</td>
+<td>Si</td>
+<td>Superadmin</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td></code>/admin/permissions/{id}<code></td>
+<td>Eliminar permiso</td>
+<td>Si</td>
+<td>Superadmin</td>
+</tr>
+<tr>
+<td>PATCH</td>
+<td></code>/admin/permissions/{id}<code></td>
+<td>Actualizar permiso</td>
+<td>Si</td>
+<td>Superadmin</td>
+</tr>
+<tr>
+<td>GET</td>
+<td></code>/admin/permissions/{id}/download-excel<code></td>
+<td>Descargar Excel</td>
+<td>Si</td>
+<td>Superadmin</td>
+</tr>
+<tr>
+<td>GET</td>
+<td></code>/admin/groups/{name}/download-excel<code></td>
+<td>Excel grupo</td>
+<td>Si</td>
+<td>Superadmin</td>
+</tr>
+<tr>
+<td>PATCH</td>
+<td></code>/admin/users/groups/{name}/routes/{path}/permissions<code></td>
+<td>Permisos grupo</td>
+<td>Si</td>
+<td>Superadmin</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2>13. Compartir (</code>/api/sharing/<code>)</h2>
+<table>
+<thead>
+<tr>
+<th>Metodo</th>
+<th>Endpoint</th>
+<th>Descripcion</th>
+<th>Auth</th>
+<th>Rol</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td></code>/sharing<code></td>
+<td>Listar links</td>
+<td>Si</td>
+<td>Superadmin</td>
+</tr>
+<tr>
+<td>POST</td>
+<td></code>/sharing/create_share<code></td>
+<td>Crear link</td>
+<td>Si</td>
+<td>Superadmin</td>
+</tr>
+<tr>
+<td>GET</td>
+<td></code>/sharing/{id}<code></td>
+<td>Detalle link</td>
+<td>Si</td>
+<td>Superadmin</td>
+</tr>
+<tr>
+<td>PATCH</td>
+<td></code>/sharing/{id}<code></td>
+<td>Actualizar link</td>
+<td>Si</td>
+<td>Superadmin</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td></code>/sharing/{id}<code></td>
+<td>Eliminar link</td>
+<td>Si</td>
+<td>Superadmin</td>
+</tr>
+<tr>
+<td>POST</td>
+<td></code>/sharing/{id}/deactivate<code></td>
+<td>Desactivar</td>
+<td>Si</td>
+<td>Superadmin</td>
+</tr>
+<tr>
+<td>GET</td>
+<td></code>/sharing/{id}/stats<code></td>
+<td>Estadisticas</td>
+<td>Si</td>
+<td>Superadmin</td>
+</tr>
+</tbody>
+</table>
+<h3>Endpoints Publicos (Sin Auth)</h3>
+<table>
+<thead>
+<tr>
+<th>Metodo</th>
+<th>Endpoint</th>
+<th>Descripcion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td></code>/sharing/access/{token}<code></td>
+<td>Acceder via link</td>
+</tr>
+<tr>
+<td>GET</td>
+<td></code>/sharing/download/{token}<code></td>
+<td>Descargar via link</td>
+</tr>
+</tbody>
+</table>
+</code>`<code>yaml
+<h1>GET /api/sharing/access/{token}</h1>
+Response:
+  success: true
+  file_info:
+    name: "documento.pdf"
+    size_formatted: "2.5 MB"
+    extension: ".pdf"
+  share_info:
+    created_by: "admin"
+    expires_at: "2024-02-01T00:00:00Z"
+    max_downloads: 10
+    current_downloads: 3
+    requires_password: false
+  can_download: true
+</code>`<code></p>
+<hr>
+<h2>14. Papelera (</code>/api/trash/<code>)</h2>
+<table>
+<thead>
+<tr>
+<th>Metodo</th>
+<th>Endpoint</th>
+<th>Descripcion</th>
+<th>Auth</th>
+<th>Rol</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td></code>/trash<code></td>
+<td>Listar papelera</td>
+<td>Si</td>
+<td>Superadmin</td>
+</tr>
+<tr>
+<td>GET</td>
+<td></code>/trash/{id}<code></td>
+<td>Detalle item</td>
+<td>Si</td>
+<td>Superadmin</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td></code>/trash/{id}<code></td>
+<td>Eliminar permanente</td>
+<td>Si</td>
+<td>Superadmin</td>
+</tr>
+<tr>
+<td>POST</td>
+<td></code>/trash/{id}/restore<code></td>
+<td>Restaurar</td>
+<td>Si</td>
+<td>Superadmin</td>
+</tr>
+<tr>
+<td>POST</td>
+<td></code>/trash/{id}/share<code></td>
+<td>Generar link descarga</td>
+<td>Si</td>
+<td>Superadmin</td>
+</tr>
+<tr>
+<td>GET</td>
+<td></code>/trash/stats<code></td>
+<td>Estadisticas</td>
+<td>Si</td>
+<td>Superadmin</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td></code>/trash/cleanup<code></td>
+<td>Limpiar expirados</td>
+<td>Si</td>
+<td>Superadmin</td>
+</tr>
+<tr>
+<td>GET</td>
+<td></code>/trash/by-path?path=X<code></td>
+<td>Items de ruta</td>
+<td>Si</td>
+<td>Superadmin</td>
+</tr>
+<tr>
+<td>GET</td>
+<td></code>/trash/config<code></td>
+<td>Configuracion</td>
+<td>Si</td>
+<td>Superadmin</td>
+</tr>
+<tr>
+<td>PUT</td>
+<td></code>/trash/config/update<code></td>
+<td>Actualizar config</td>
+<td>Si</td>
+<td>Superadmin</td>
+</tr>
+</tbody>
+</table>
+</code>`<code>yaml
+TrashItem:
+  id: "abc123-uuid"
+  original_path: "/proyectos/documento.pdf"
+  original_name: "documento.pdf"
+  trash_path: "/.trash/abc123_documento.pdf"
+  size: 1048576
+  size_formatted: "1.0 MB"
+  deleted_by: "usuario"
+  deleted_at: "2024-01-15T10:30:00Z"
+  expires_at: "2024-02-14T10:30:00Z"  # 30 dias
+  can_restore: true
+</code>`<code></p>
+<hr>
+<h2>15. Notificaciones (</code>/api/notifications/<code>)</h2>
+<table>
+<thead>
+<tr>
+<th>Metodo</th>
+<th>Endpoint</th>
+<th>Descripcion</th>
+<th>Auth</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td></code>/notifications<code></td>
+<td>Listar notificaciones</td>
+<td>Si</td>
+</tr>
+<tr>
+<td>GET</td>
+<td></code>/notifications/{id}<code></td>
+<td>Detalle</td>
+<td>Si</td>
+</tr>
+<tr>
+<td>PATCH</td>
+<td></code>/notifications/{id}/read<code></td>
+<td>Marcar como leida</td>
+<td>Si</td>
+</tr>
+<tr>
+<td>POST</td>
+<td></code>/notifications/mark-all-read<code></td>
+<td>Marcar todas leidas</td>
+<td>Si</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td></code>/notifications/{id}<code></td>
+<td>Eliminar</td>
+<td>Si</td>
+</tr>
+<tr>
+<td>GET</td>
+<td></code>/notifications/unread-count<code></td>
+<td>Contador no leidas</td>
+<td>Si</td>
+</tr>
+<tr>
+<td>GET</td>
+<td></code>/notifications/attachment-download/{id}<code></td>
+<td>Descargar adjunto</td>
+<td>Si</td>
+</tr>
+</tbody>
+</table>
+<h3>Tipos de Notificaciones</h3>
+<p></code>`<code>yaml
+NotificationTypes:
+<ul>
+<li>file_shared      # Archivo compartido contigo</li>
+<li>permission_granted  # Permiso otorgado</li>
+<li>permission_revoked  # Permiso revocado</li>
+<li>file_deleted     # Archivo eliminado de tu carpeta</li>
+<li>system_message   # Mensaje del sistema</li>
+<li>mention         # Mencionado en comentario</li>
+</ul>
+</code>`<code></p>
+<hr>
+<h2>16. Colores de Directorios (</code>/api/file-ops/<code>)</h2>
+<table>
+<thead>
+<tr>
+<th>Metodo</th>
+<th>Endpoint</th>
+<th>Descripcion</th>
+<th>Auth</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td></code>/file-ops/directory-colors<code></td>
+<td>Obtener colores</td>
+<td>Si</td>
+</tr>
+<tr>
+<td>POST</td>
+<td></code>/file-ops/set-directory-color<code></td>
+<td>Establecer color</td>
+<td>Si</td>
+</tr>
+<tr>
+<td>POST</td>
+<td></code>/file-ops/remove-directory-color<code></td>
+<td>Eliminar color</td>
+<td>Si</td>
+</tr>
+<tr>
+<td>POST</td>
+<td></code>/file-ops/set-directory-colors-batch<code></td>
+<td>Colores batch</td>
+<td>Si</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2>17. Office Online (</code>/api/office/<code>)</h2>
+<table>
+<thead>
+<tr>
+<th>Metodo</th>
+<th>Endpoint</th>
+<th>Descripcion</th>
+<th>Auth</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>POST</td>
+<td></code>/office/open<code></td>
+<td>Abrir en Office 365</td>
+<td>Si</td>
+</tr>
+<tr>
+<td>POST</td>
+<td></code>/office/save<code></td>
+<td>Guardar desde Office</td>
+<td>Si</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2>Codigos de Respuesta HTTP</h2>
+<table>
+<thead>
+<tr>
+<th>Codigo</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>200</td>
+<td>OK - Operacion exitosa</td>
+</tr>
+<tr>
+<td>201</td>
+<td>Created - Recurso creado</td>
+</tr>
+<tr>
+<td>204</td>
+<td>No Content - Eliminado</td>
+</tr>
+<tr>
+<td>400</td>
+<td>Bad Request - Datos invalidos</td>
+</tr>
+<tr>
+<td>401</td>
+<td>Unauthorized - Token invalido/expirado</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Forbidden - Sin permisos</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Not Found - Recurso no encontrado</td>
+</tr>
+<tr>
+<td>409</td>
+<td>Conflict - Conflicto (ej: archivo existe)</td>
+</tr>
+<tr>
+<td>413</td>
+<td>Payload Too Large - Archivo muy grande</td>
+</tr>
+<tr>
+<td>429</td>
+<td>Too Many Requests - Rate limit</td>
+</tr>
+<tr>
+<td>500</td>
+<td>Server Error - Error interno</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2>Formato de Errores</h2>
+<p></code>`<code>yaml
+<h1>Error estandar</h1>
+{
+  "success": false,
+  "error": "Mensaje de error descriptivo",
+  "code": "ERROR_CODE",
+  "details": {
+    "field": ["Error especifico del campo"]
+  }
+}</p>
+<h1>Error de validacion DRF</h1>
+{
+  "detail": "No autenticado.",
+  "code": "not_authenticated"
+}
+</code>`<code></p>
+<hr>
+<h2>Headers Requeridos</h2>
+<p></code>`<code>yaml
+<h1>Autenticacion</h1>
+Authorization: Bearer eyJhbGciOiJIUzI1NiIs...</p>
+<h1>Content Type (JSON)</h1>
+Content-Type: application/json</p>
+<h1>Content Type (Upload)</h1>
+Content-Type: multipart/form-data
+</code>``</p>
+<hr>
+<h2>Rate Limiting</h2>
+<ul>
+<li><strong>Autenticacion:</strong> 5 intentos / minuto</li>
+<li><strong>API General:</strong> 100 requests / minuto</li>
+<li><strong>Uploads:</strong> 10 uploads / minuto</li>
+<li><strong>IA (GROQ):</strong> 30 requests / minuto (pool de keys)</li></p>
+<p></ol>
+<hr>
+<h2>Diagrama de Seguridad</h2>
+<div class="diagram-container">
+    <div class="diagram-title">Diagrama 2</div>
+    <img src="imagenes/05_api_endpoints_diagrama_02.png" alt="Diagrama 2">
+</div>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,144 @@
+graph TB
+    subgraph USUARIO["👤 USUARIO EN NAVEGADOR"]
+        BROWSER["Firefox/Chrome/Safari"]
+    end
+    
+    subgraph UI["🎨 CAPA UI - REACT COMPONENTS 59"]
+        subgraph PAGES["📄 PÁGINAS 13"]
+            FE["Explorador de Archivos"]
+            DASH["Panel de Control"]
+            SEARCH["Búsqueda"]
+            MSG["Mensajes"]
+            ADMIN["Administración"]
+            AUDIT["Auditoría"]
+            LOGIN["Autenticación"]
+        end
+        
+        subgraph COMP["🧩 COMPONENTES"]
+            LAYOUT["Diseño<br/>Barra Nav+Lateral"]
+            FILETREE["Vista Árbol Archivos"]
+            FILELIST["Lista Archivos"]
+            MODAL["Modales<br/>Subir/Renombrar"]
+            WIDGETS["Widgets<br/>Groq/IA"]
+        end
+        
+        LAYOUT -.->|envuelve| PAGES
+        PAGES -->|usa| COMP
+    end
+    
+    subgraph HOOKS["🎣 HOOKS PERSONALIZADOS 9"]
+        HTREE["useTreeData<br/>obtenerÁrbol, navegar"]
+        HSORT["useFileSort<br/>ordenar, filtrar"]
+        HCLIP["useClipboard<br/>copiar, mover, pegar"]
+        HPERM["usePathPermissions<br/>verificar acceso"]
+        HMODAL["useModal<br/>abrir, cerrar"]
+        HTOAST["useToast<br/>mostrar, ocultar"]
+        HTHEME["useTheme<br/>oscuro, claro"]
+    end
+    
+    subgraph STATE["🧠 GESTIÓN DE ESTADO - ZUSTAND 3"]
+        AUTH["🔐 authStore<br/>usuario, token<br/>iniciar, cerrar sesión"]
+        CLIPBOARD["📋 clipboardStore<br/>elementos, modo<br/>copiar, mover, pegar"]
+        NOTIF["🔔 almacénNotificaciones<br/>notificaciones, alertas<br/>agregarNotificación"]
+    end
+    
+    subgraph API["📡 API CLIENT - AXIOS 16 MÓDULOS"]
+        subgraph APICORE["🔧 Core"]
+            CLIENT["client.ts<br/>Base Config<br/>Interceptores"]
+        end
+        
+        subgraph APIAUTH["🔐 Autenticación"]
+            AUTHAPI["auth.ts<br/>iniciar, cerrar sesión"]
+        end
+        
+        subgraph APIFILES["📁 Archivos"]
+            FILESAPI["files.ts<br/>obtenerArchivos, obtenerÁrbol"]
+            FILEOPSAPI["fileOps.ts<br/>copiar, mover, eliminar"]
+        end
+        
+        subgraph APISHARE["🔗 Compartición"]
+            SHAREAPI["sharing.ts<br/>crearEnlace, gestionar"]
+        end
+        
+        subgraph APIADMIN["👥 Administración"]
+            USERSAPI["users.ts<br/>CRUD usuarios"]
+            ADMINAPI["admin.ts<br/>grupos, permisos"]
+        end
+        
+        subgraph APIDATAS["📊 Datos"]
+            AUDITAPI["audit.ts<br/>registros"]
+            STATSAPI["stats.ts<br/>estadísticas"]
+            NOTIFAPI["notifications.ts"]
+        end
+        
+        subgraph APIAI["🤖 IA"]
+            AIAPI["aiAbbreviations.ts"]
+            COLORAPI["directoryColors.ts"]
+            GROQAPI["groqStats.ts"]
+        end
+        
+        CLIENT -->|"auth"| AUTHAPI
+        CLIENT -->|"files"| FILESAPI
+        CLIENT -->|"fileOps"| FILEOPSAPI
+        CLIENT -->|"sharing"| SHAREAPI
+        CLIENT -->|"users"| USERSAPI
+        CLIENT -->|"admin"| ADMINAPI
+        CLIENT -->|"audit"| AUDITAPI
+        CLIENT -->|"stats"| STATSAPI
+        CLIENT -->|"notifications"| NOTIFAPI
+        CLIENT -->|"ai"| AIAPI
+        CLIENT -->|"colors"| COLORAPI
+        CLIENT -->|"groq"| GROQAPI
+    end
+    
+    subgraph BACKEND["🔧 BACKEND - DJANGO REST API"]
+        DJANGO["Django REST Framework<br/>Endpoints /api/"]
+    end
+    
+    subgraph DB["💾 DATABASE - POSTGRESQL"]
+        DATABASE["PostgreSQL<br/>Files, Users, Perms<br/>Audit, Sharing"]
+    end
+    
+    subgraph CONTEXT["🎨 CONTEXT API"]
+        THEMECTX["ContextoTema<br/>Modo Oscuro/Claro"]
+    end
+    
+    BROWSER -->|render| UI
+    
+    UI -->|usa| HOOKS
+    UI -->|suscribe| STATE
+    UI -->|suscribe| CONTEXT
+    
+    HOOKS -->|lee/escribe| STATE
+    HOOKS -->|llama| API
+    STATE -->|consulta| API
+    
+    API -->|HTTP/JWT| BACKEND
+    BACKEND -->|Query| DB
+    
+    COMP -->|actualiza| STATE
+    STATE -->|notifica| COMP
+    
+    HOOKS -->|dispara| NOTIF
+    NOTIF -->|muestra toast| COMP
+    
+    style USUARIO fill:#ffcccc
+    style UI fill:#99ccff
+    style PAGES fill:#ccffff
+    style COMP fill:#ccffff
+    style HOOKS fill:#99ff99
+    style STATE fill:#ffffcc
+    style AUTH fill:#ffffcc
+    style CLIPBOARD fill:#ffffcc
+    style NOTIF fill:#ffffcc
+    style API fill:#ffcc99
+    style APICORE fill:#ffe6cc
+    style APIAUTH fill:#ffe6cc
+    style APIFILES fill:#ffe6cc
+    style APISHARE fill:#ffe6cc
+    style APIADMIN fill:#ffe6cc
+    style APIDATAS fill:#ffe6cc
+    style APIAI fill:#ffe6cc
+    style BACKEND fill:#cc99ff
+    style DB fill:#ffff99
+    style CONTEXT fill:#ffccff

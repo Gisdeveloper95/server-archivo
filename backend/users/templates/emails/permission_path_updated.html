@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Permisos de Acceso Restablecidos</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background-color: #f4f4f4; }
+        .container { max-width: 650px; margin: 20px auto; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .header { background-color: #4caf50; color: white; padding: 40px 30px; text-align: center; }
+        .header h1 { margin: 0 0 10px 0; font-size: 28px; font-weight: 600; color: white; }
+        .header p { margin: 0; font-size: 14px; opacity: 0.95; color: white; }
+        .content { padding: 30px; }
+        .greeting { font-size: 16px; margin-bottom: 20px; }
+        .success-box { background: #e8f5e9; border-left: 4px solid #4caf50; padding: 20px; border-radius: 6px; margin: 20px 0; }
+        .success-box h3 { margin: 0 0 10px 0; font-size: 18px; color: #2e7d32; display: flex; align-items: center; gap: 8px; }
+        .success-box p { margin: 5px 0; color: #1b5e20; font-size: 14px; }
+        .info-box { background: #f8f9fa; padding: 20px; margin: 20px 0; border-left: 4px solid #2196f3; border-radius: 6px; }
+        .info-box h3 { margin: 0 0 15px 0; font-size: 18px; color: #1976d2; display: flex; align-items: center; gap: 8px; }
+        .info-box p { margin: 8px 0; }
+        .path-change { background-color: #fff9e6; padding: 20px; border-radius: 8px; margin: 20px 0; border: 1px solid #ffe082; }
+        .path-change h3 { margin: 0 0 15px 0; font-size: 18px; color: #f57c00; display: flex; align-items: center; gap: 8px; }
+        .path-item { margin: 15px 0; }
+        .path-label { font-size: 12px; font-weight: 600; color: #666; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+        .path-value { background: #f5f5f5; padding: 12px; border-radius: 6px; font-family: 'Courier New', monospace; font-size: 13px; word-break: break-all; border: 1px solid #e0e0e0; }
+        .path-value.old { background: #ffebee; border-color: #ef9a9a; }
+        .path-value.new { background: #e8f5e9; border-color: #a5d6a7; }
+        .highlight { color: #2196f3; font-weight: 600; }
+        .arrow { text-align: center; color: #ff9800; font-size: 24px; margin: 10px 0; }
+        .stats-box { display: grid; grid-template-columns: 1fr; gap: 10px; margin: 20px 0; background: #e3f2fd; padding: 20px; border-radius: 8px; border-left: 4px solid #2196f3; }
+        .stat-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #bbdefb; }
+        .stat-item:last-child { border-bottom: none; }
+        .stat-label { font-size: 14px; color: #0d47a1; font-weight: 500; }
+        .stat-value { font-size: 18px; font-weight: 700; color: #1565c0; }
+        .cta-button { display: inline-block; padding: 14px 30px; background-color: #4caf50; color: white !important; text-decoration: none; border-radius: 6px; font-weight: 600; margin: 20px 0; }
+        .cta-button:hover { background-color: #388e3c; }
+        .footer { background: #f8f9fa; padding: 25px; text-align: center; border-top: 1px solid #e0e0e0; }
+        .footer p { margin: 5px 0; color: #666; font-size: 12px; }
+        .divider { height: 1px; background: #e0e0e0; margin: 25px 0; }
+        .meta-info { background: #fafafa; padding: 15px; border-radius: 6px; margin-top: 15px; border: 1px solid #e0e0e0; }
+        .meta-row { display: flex; justify-content: space-between; margin: 8px 0; font-size: 13px; }
+        .meta-label { color: #666; }
+        .meta-value { font-weight: 600; color: #333; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>✓ Permisos Actualizados Automáticamente</h1>
+            <p>Sistema de Gestión de Archivos - IGAC</p>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <div class="greeting">
+                <p>Estimado/a <strong>{{ user_name }}</strong>,</p>
+            </div>
+
+            <p style="margin-bottom: 20px;">
+                Le informamos que se ha renombrado un directorio que afecta sus permisos de acceso.
+                <strong style="color: #4caf50;">Sus permisos han sido actualizados automáticamente</strong>
+                y su acceso ha sido restablecido sin interrupciones.
+            </p>
+
+            <!-- Success Notification -->
+            <div class="success-box">
+                <h3>✓ Acción Completada</h3>
+                <p><strong>Sus permisos siguen activos.</strong> El sistema actualizó automáticamente las rutas para mantener su acceso.</p>
+            </div>
+
+            <!-- Path Change Details -->
+            <div class="path-change">
+                <h3>📁 Cambio de Ruta</h3>
+
+                <div class="path-item">
+                    <div class="path-label">❌ Ruta Anterior (Renombrada)</div>
+                    <div class="path-value old">{{ old_path }}</div>
+                </div>
+
+                <div class="arrow">↓</div>
+
+                <div class="path-item">
+                    <div class="path-label">✓ Nueva Ruta (Actualizada)</div>
+                    <div class="path-value new">{{ new_path }}</div>
+                </div>
+
+                <div class="meta-info">
+                    <div class="meta-row">
+                        <span class="meta-label">Carpeta renombrada:</span>
+                        <span class="meta-value">{{ old_folder_name }} → {{ new_folder_name }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics -->
+            <div class="stats-box">
+                <h3 style="margin: 0 0 15px 0; color: #1565c0; font-size: 16px;">📊 Detalles de la Actualización</h3>
+                <div class="stat-item">
+                    <span class="stat-label">Permisos actualizados</span>
+                    <span class="stat-value">{{ permissions_count }}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Estado de acceso</span>
+                    <span class="stat-value" style="color: #4caf50;">✓ ACTIVO</span>
+                </div>
+            </div>
+
+            <!-- Modified By -->
+            <div class="info-box">
+                <h3>👤 Cambio Realizado Por</h3>
+                <div class="meta-info" style="background: white; border: none; padding: 0; margin: 0;">
+                    <div class="meta-row">
+                        <span class="meta-label">Usuario:</span>
+                        <span class="meta-value">{{ changed_by_name }}</span>
+                    </div>
+                    <div class="meta-row">
+                        <span class="meta-label">Correo:</span>
+                        <span class="meta-value">{{ changed_by_email }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Access Path Display -->
+            <div class="info-box" style="border-left-color: #4caf50; background: #e8f5e9;">
+                <h3 style="color: #2e7d32;">🌐 Acceso Actual al Sistema</h3>
+                <p style="margin-bottom: 10px; font-size: 13px; color: #1b5e20;">
+                    Puede acceder al directorio actualizado en:
+                </p>
+                <div class="path-value new">{{ base_path_display }}</div>
+            </div>
+
+            <!-- CTA Button -->
+            <div style="text-align: center; margin: 30px 0;">
+                <p style="margin-bottom: 15px; font-size: 15px;">Verifique su acceso actualizado:</p>
+                <a href="{{ frontend_url }}" class="cta-button">🌐 Acceder al Sistema</a>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Important Note -->
+            <div style="background: #fff3e0; padding: 15px; border-radius: 6px; border-left: 4px solid #ff9800;">
+                <p style="margin: 0; font-size: 13px; color: #e65100;">
+                    <strong>📌 Nota Importante:</strong> Esta actualización fue automática.
+                    Todos sus permisos (lectura, escritura, eliminación) se mantienen sin cambios.
+                    Solo se actualizó la ruta del directorio.
+                </p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p><strong>Instituto Geográfico Agustín Codazzi (IGAC)</strong></p>
+            <p>Sistema de Gestión de Archivos</p>
+            <p style="margin-top: 15px; font-size: 11px; color: #999;">
+                Este es un correo electrónico automático. Por favor no responda a este mensaje.
+            </p>
+            <p style="font-size: 11px; color: #999;">
+                Si tiene preguntas sobre este cambio, contacte a <strong>{{ changed_by_email }}</strong>
+            </p>
+        </div>
+    </div>
+</body>
+</html>
