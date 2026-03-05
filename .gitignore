@@ -78,3 +78,11 @@ solicitud_ambientes/
 scripts/
 *.txt
 .claude/
+
+# ---- Debug / utility scripts ----
+check_perms.py
+execute_sql.py
+reset_db.py
+run_migrations.py
+test_permissions_linux.py
+usersviews.py
